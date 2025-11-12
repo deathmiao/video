@@ -2,20 +2,240 @@
 title: 卡片列表
 layout: default
 ---
-```html
-<!-- 你的完整HTML代码 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>卡片列表</title>
+    <title>Video Card List</title>
     <!-- 样式部分 -->
     <style>
-        /* 你的CSS代码 */
+        /* 页面基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding-bottom: 20px;
+        }
+
+        /* 顶部导航栏 */
+        .nav {
+            display: flex;
+            gap: 20px;
+            padding: 15px 10px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .nav-item {
+            font-size: 16px;
+            color: #666;
+            text-decoration: none;
+            white-space: nowrap;
+            padding: 5px 0;
+        }
+        .nav-item.active {
+            color: #ff4400;
+            font-weight: bold;
+            border-bottom: 2px solid #ff4400;
+        }
+        .nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* 卡片容器：响应式布局 */
+        .card-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            padding: 0 10px;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* 卡片图片 */
+        .card-img-wrap {
+            position: relative;
+            width: 100%;
+            padding-top: 140%; /* 竖版卡片比例 */
+        }
+        .card-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 图片上的时长标签 */
+        .card-time {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: rgba(0,0,0,0.8);
+            color: #fff;
+            font-size: 11px;
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        /* 卡片内容区 */
+        .card-content {
+            padding: 8px;
+        }
+
+        /* 卡片标题 */
+        .card-title {
+            font-size: 13px;
+            line-height: 1.3;
+            margin: 0 0 4px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 卡片底部信息 */
+        .card-info {
+            font-size: 11px;
+            color: #999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
-    <!-- 你的HTML内容 -->
+    <!-- 顶部导航 -->
+    <div class="nav">
+        <a href="#" class="nav-item">Live</a>
+        <a href="#" class="nav-item active">Recommended</a>
+        <a href="#" class="nav-item">Hot</a>
+        <a href="#" class="nav-item">Categories</a>
+        <a href="#" class="nav-item">Anime</a>
+        <a href="#" class="nav-item">Movies</a>
+    </div>
+
+    <!-- 卡片列表 -->
+    <div class="card-list" id="cardContainer">
+        <!-- 卡片1 -->
+        <a href="https://www.example.com" class="card" target="_blank" rel="noopener noreferrer">
+            <div class="card-img-wrap">
+                <img src="https://gimg1.baidu.com/gimg/app=2001&src=https%3A%2F%2Fimg2.cycimg.me/pic/cover/l/86/5a/419846_w9jmH.jpg" alt="Cover" class="card-img">
+                <span class="card-time">00:33</span>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Fairy-like Dog Group</h3>
+                <div class="card-info">
+                    <span>269 Views</span>
+                    <span>Movie</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- 卡片2 -->
+        <a href="https://www.example.com" class="card" target="_blank" rel="noopener noreferrer">
+            <div class="card-img-wrap">
+                <img src="https://gimg2.baidu.com/gimg/app=2001&src=https%3A%2F%2Fimg0.baidu.com/it/u=3584209199,3443050286&fm=253&fmt=auto?w=800&h=1200" alt="Cover" class="card-img">
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Archaeology of Sanxingdui</h3>
+                <div class="card-info">
+                    <span>210M Views</span>
+                    <span>Documentary</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- 卡片3 -->
+        <a href="https://www.example.com" class="card" target="_blank" rel="noopener noreferrer">
+            <div class="card-img-wrap">
+                <img src="https://gimg3.baidu.com/gimg/app=2001&src=https%3A%2F%2Fimg1.baidu.com/it/u=2115593535,3457020501&fm=253&fmt=auto?w=800&h=1200" alt="Cover" class="card-img">
+                <span class="card-time">09:38</span>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">EU's Rare Earth Application</h3>
+                <div class="card-info">
+                    <span>6.4K Views</span>
+                    <span>News</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- 卡片4 -->
+        <a href="https://www.example.com" class="card" target="_blank" rel="noopener noreferrer">
+            <div class="card-img-wrap">
+                <img src="https://gimg1.baidu.com/gimg/app=2001&src=https%3A%2F%2Fimg2.cycimg.me/pic/cover/l/86/5a/419846_w9jmH.jpg" alt="Cover" class="card-img">
+                <span class="card-time">00:10</span>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Punishment for Losing</h3>
+                <div class="card-info">
+                    <span>3.4K Views</span>
+                    <span>Short</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- 卡片5 -->
+        <a href="https://www.example.com" class="card" target="_blank" rel="noopener noreferrer">
+            <div class="card-img-wrap">
+                <img src="https://gimg2.baidu.com/gimg/app=2001&src=https%3A%2F%2Fimg0.baidu.com/it/u=3584209199,3443050286&fm=253&fmt=auto?w=800&h=1200" alt="Cover" class="card-img">
+                <span class="card-time">45:20</span>
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Ancient History Documentary</h3>
+                <div class="card-info">
+                    <span>1.2M Views</span>
+                    <span>Doc</span>
+                </div>
+            </div>
+        </a>
+
+        <!-- 卡片6 -->
+        <a href="https://www.example.com" class="card" target="_blank" rel="noopener noreferrer">
+            <div class="card-img-wrap">
+                <img src="https://gimg1.baidu.com/gimg/app=2001&src=https%3A%2F%2Fimg2.cycimg.me/pic/cover/l/86/5a/419846_w9jmH.jpg" alt="Cover" class="card-img">
+            </div>
+            <div class="card-content">
+                <h3 class="card-title">Cute Pet Daily Life</h3>
+                <div class="card-info">
+                    <span>892 Views</span>
+                    <span>Pet</span>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- 可选：添加简单交互 -->
+    <script>
+        // 导航栏激活状态切换
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
