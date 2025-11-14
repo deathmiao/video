@@ -3,378 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美少女虚拟宠物</title>
+    <title>自定义打字机文字冒险游戏</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+            font-family: 'Courier New', Courier, monospace;
         }
-        
+
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
             min-height: 100vh;
-            background: linear-gradient(135deg, #f0e6ff 0%, #d8bfff 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
         }
-        
-        .container {
+
+        /* 游戏容器 */
+        .game-container {
             width: 100%;
             max-width: 800px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            box-shadow: 0 15px 30px rgba(123, 31, 162, 0.15);
-            padding: 30px;
-            text-align: center;
-            position: relative;
+            background-color: #2d2d2d;
+            border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
         }
-        
-        h1 {
-            color: #9c27b0;
-            margin-bottom: 20px;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(156, 39, 176, 0.1);
+
+        /* 游戏图片区 */
+        .game-image {
+            width: 100%;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* 默认图片（可替换） */
+            background-image: url("https://picsum.photos/seed/adventure/800/300");
         }
-        
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.2rem;
-        }
-        
-        .pet-container {
-            position: relative;
-            width: 300px;
-            height: 350px;
-            margin: 0 auto 30px;
-        }
-        
-        #petContainer {
+
+        /* 文字显示区 */
+        .text-area {
+            padding: 30px;
+            min-height: 200px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-        #petStatic, #feedAnimation, #playAnimation {
-            width: 250px;
-            height: 300px;
-            object-fit: contain;
-            border-radius: 20px;
-        }
-        #feedAnimation, #playAnimation {
-            display: none;
-        }
-        
-        .stats {
-            background: #f8f5ff;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: inset 0 2px 5px rgba(156, 39, 176, 0.1);
-        }
-        
-        .affection-meter {
-            margin-bottom: 15px;
-        }
-        
-        .affection-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .progress-bar {
-            height: 25px;
-            background: #e0e0e0;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(to right, #9c27b0, #e91e63);
-            width: 0%;
-            border-radius: 12px;
-            transition: width 0.5s ease;
             position: relative;
         }
-        
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-        
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-        }
-        
-        .action-btn {
-            padding: 15px 30px;
+
+        .text-box {
             font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        /* 打字机光标 */
+        .typing-cursor {
+            display: inline-block;
+            width: 12px;
+            height: 24px;
+            background-color: #f0f0f0;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 选项区 */
+        .choices-area {
+            padding: 0 30px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            display: none; /* 默认隐藏，文字打完显示 */
+        }
+
+        .choice-btn {
+            padding: 12px 20px;
+            background-color: #3d3d3d;
+            border: 2px solid #5d5d5d;
+            border-radius: 8px;
+            color: #f0f0f0;
+            font-size: 1rem;
+            text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .choice-btn:hover {
+            background-color: #4d4d4d;
+            border-color: #7d7d7d;
+            transform: translateX(5px);
+        }
+
+        /* 自定义设置区 */
+        .custom-setting {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 800px;
+            background-color: #2d2d2d;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .setting-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffd700;
+        }
+
+        .setting-group {
+            margin-bottom: 15px;
+        }
+
+        .setting-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .setting-group input,
+        .setting-group textarea,
+        .setting-group select {
+            width: 100%;
+            padding: 10px;
+            background-color: #3d3d3d;
+            border: 1px solid #5d5d5d;
+            border-radius: 5px;
+            color: #f0f0f0;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        .setting-group textarea {
+            min-height: 100px;
+        }
+
+        .apply-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #ffd700;
+            border: none;
+            border-radius: 8px;
+            color: #1a1a1a;
+            font-size: 1.2rem;
             font-weight: bold;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .apply-btn:hover {
+            background-color: #ffc107;
+            transform: translateY(-2px);
+        }
+
+        /* 存档区 */
+        .save-area {
+            margin-top: 20px;
             display: flex;
-            align-items: center;
             gap: 10px;
         }
-        
-        .feed-btn {
-            background: linear-gradient(to right, #ff9eaf, #ff6b6b);
-        }
-        
-        .play-btn {
-            background: linear-gradient(to right, #4ecdc4, #26a69a);
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-        
-        .action-btn:active {
-            transform: translateY(0);
-        }
-        
-        .action-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .message {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f5ff;
-            border-radius: 10px;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: #555;
-            box-shadow: inset 0 2px 5px rgba(156, 39, 176, 0.1);
+
+        .save-btn, .load-btn {
+            padding: 10px 20px;
+            background-color: #3d3d3d;
+            border: 1px solid #5d5d5d;
+            border-radius: 5px;
+            color: #f0f0f0;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
-        
-        .pet-status {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f0f0f0;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .status-icon {
-            font-size: 1.5rem;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .pet-container {
-                width: 250px;
-                height: 300px;
-            }
-            
-            .actions {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .action-btn {
-                padding: 12px 25px;
-                font-size: 1rem;
-            }
+
+        .save-btn:hover, .load-btn:hover {
+            background-color: #4d4d4d;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>美少女虚拟宠物</h1>
-        <p class="subtitle">通过投喂和玩耍增加与美少女的好感度吧！</p>
-        
-        <div class="pet-container" id="petContainer">
-            <!-- 替换为你提供的美少女图片链接 -->
-            <img 
-                id="petStatic" 
-                src="1763081821758.png" 
-                alt="美少女静态图"
-            >
-            <!-- 投喂动画（替换为你的视频链接） -->
-            <video 
-                id="feedAnimation" 
-                autoplay 
-                muted 
-                loop 
-                playsinline
-            >
-                <source src="v0369cg10004d4b8thvog65oq7u0ogm0.mp4" type="video/mp4">
-            </video>
-            <!-- 玩耍动画（替换为你的视频链接） -->
-            <video 
-                id="playAnimation" 
-                autoplay 
-                muted 
-                loop 
-                playsinline
-            >
-                <source src="1763083180426.mp4" type="video/mp4">
-            </video>
+    <div class="game-container">
+        <!-- 游戏图片（可自定义） -->
+        <div class="game-image" id="gameImage"></div>
+        <!-- 文字显示区 -->
+        <div class="text-area">
+            <div class="text-box" id="textBox"></div>
+            <div class="typing-cursor" id="typingCursor"></div>
         </div>
-        
-        <div class="stats">
-            <div class="affection-meter">
-                <div class="affection-label">
-                    <span>好感度</span>
-                    <span id="affectionPercent">0.0%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress" id="affectionProgress">
-                        <div class="progress-text" id="progressText">0.0%</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="pet-status">
-                <div class="status-item">
-                    <span class="status-icon">🍖</span>
-                    <span id="feedCount">0</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-icon">🎾</span>
-                    <span id="playCount">0</span>
-                </div>
-            </div>
+        <!-- 选项区 -->
+        <div class="choices-area" id="choicesArea"></div>
+    </div>
+
+    <!-- 自定义设置区 -->
+    <div class="custom-setting">
+        <h3 class="setting-title">自定义游戏内容</h3>
+        <div class="setting-group">
+            <label for="customImage">背景图片链接：</label>
+            <input type="text" id="customImage" placeholder="输入图片URL（支持JPG/PNG）">
         </div>
-        
-        <div class="actions">
-            <button class="action-btn feed-btn" id="feedBtn">
-                <span>🍖</span> 投喂
-            </button>
-            <button class="action-btn play-btn" id="playBtn">
-                <span>🎾</span> 玩耍
-            </button>
+        <div class="setting-group">
+            <label for="customText">剧情文字：</label>
+            <textarea id="customText" placeholder="输入当前剧情文字（换行用Enter）">你醒来时，发现自己身处一片陌生的森林。阳光透过树叶的缝隙洒下，远处传来溪流的声音。</textarea>
         </div>
-        
-        <div class="message" id="message">
-            欢迎！点击按钮与你的美少女互动吧！
+        <div class="setting-group">
+            <label for="choice1">选项1文字：</label>
+            <input type="text" id="choice1" value="朝着溪流的方向走去">
         </div>
+        <div class="setting-group">
+            <label for="choice1Text">选项1后续剧情：</label>
+            <textarea id="choice1Text" placeholder="输入选项1的后续剧情">你沿着声音找到了清澈的溪流，溪边坐着一位白发少女，她笑着向你挥手。</textarea>
+        </div>
+        <div class="setting-group">
+            <label for="choice1Image">选项1背景图：</label>
+            <input type="text" id="choice1Image" placeholder="输入图片URL" value="https://picsum.photos/seed/stream/800/300">
+        </div>
+        <div class="setting-group">
+            <label for="choice2">选项2文字：</label>
+            <input type="text" id="choice2" value="深入森林探索">
+        </div>
+        <div class="setting-group">
+            <label for="choice2Text">选项2后续剧情：</label>
+            <textarea id="choice2Text" placeholder="输入选项2的后续剧情">你走进森林深处，发现了一座古老的石碑，上面刻着神秘的符文。</textarea>
+        </div>
+        <div class="setting-group">
+            <label for="choice2Image">选项2背景图：</label>
+            <input type="text" id="choice2Image" placeholder="输入图片URL" value="https://picsum.photos/seed/stone/800/300">
+        </div>
+        <button class="apply-btn" id="applyBtn">应用自定义内容</button>
+    </div>
+
+    <!-- 存档区 -->
+    <div class="save-area">
+        <button class="save-btn" id="saveBtn">存档</button>
+        <button class="load-btn" id="loadBtn">读档</button>
     </div>
 
     <script>
-        const petData = {
-            affection: 0, 
-            maxAffection: 100000, 
-            feedCount: 0, 
-            playCount: 0, 
-            increment: 0.1 
+        // 游戏核心数据
+        const gameData = {
+            currentText: "你醒来时，发现自己身处一片陌生的森林。阳光透过树叶的缝隙洒下，远处传来溪流的声音。",
+            currentImage: "https://picsum.photos/seed/adventure/800/300",
+            choices: [
+                {
+                    text: "朝着溪流的方向走去",
+                    nextText: "你沿着声音找到了清澈的溪流，溪边坐着一位白发少女，她笑着向你挥手。",
+                    nextImage: "https://picsum.photos/seed/stream/800/300"
+                },
+                {
+                    text: "深入森林探索",
+                    nextText: "你走进森林深处，发现了一座古老的石碑，上面刻着神秘的符文。",
+                    nextImage: "https://picsum.photos/seed/stone/800/300"
+                }
+            ],
+            typingSpeed: 50 // 打字速度（毫秒/字）
         };
-        
-        const petStatic = document.getElementById('petStatic');
-        const feedAnimation = document.getElementById('feedAnimation');
-        const playAnimation = document.getElementById('playAnimation');
-        const affectionPercent = document.getElementById('affectionPercent');
-        const affectionProgress = document.getElementById('affectionProgress');
-        const progressText = document.getElementById('progressText');
-        const feedBtn = document.getElementById('feedBtn');
-        const playBtn = document.getElementById('playBtn');
-        const message = document.getElementById('message');
-        const feedCount = document.getElementById('feedCount');
-        const playCount = document.getElementById('playCount');
-        
-        function updateUI() {
-            const percent = (petData.affection / petData.maxAffection * 100).toFixed(1);
-            affectionPercent.textContent = `${percent}%`;
-            progressText.textContent = `${percent}%`;
-            affectionProgress.style.width = `${percent}%`;
-            feedCount.textContent = petData.feedCount;
-            playCount.textContent = petData.playCount;
-            
-            if (petData.affection >= petData.maxAffection) {
-                message.textContent = "🎉 恭喜！你已与美少女达到最大好感度！";
-                feedBtn.disabled = true;
-                playBtn.disabled = true;
-            }
+
+        // DOM元素
+        const textBox = document.getElementById('textBox');
+        const typingCursor = document.getElementById('typingCursor');
+        const choicesArea = document.getElementById('choicesArea');
+        const gameImage = document.getElementById('gameImage');
+        const applyBtn = document.getElementById('applyBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const loadBtn = document.getElementById('loadBtn');
+
+        // 初始化游戏
+        function initGame() {
+            gameImage.style.backgroundImage = `url(${gameData.currentImage})`;
+            typeText(gameData.currentText);
         }
-        
-        // 投喂动画逻辑
-        feedBtn.addEventListener('click', function() {
-            petData.affection += petData.increment;
-            petData.feedCount++;
-            
-            petStatic.style.display = 'none';
-            playAnimation.style.display = 'none';
-            feedAnimation.style.display = 'block';
-            feedAnimation.currentTime = 0;
-            
-            message.textContent = "🍖 投喂成功！美少女超开心～";
-            updateUI();
-            
-            setTimeout(() => {
-                feedAnimation.style.display = 'none';
-                petStatic.style.display = 'block';
-            }, 3000);
+
+        // 打字机效果
+        function typeText(text) {
+            textBox.innerHTML = '';
+            typingCursor.style.display = 'inline-block';
+            choicesArea.style.display = 'none';
+            let index = 0;
+
+            const typingInterval = setInterval(() => {
+                if (index < text.length) {
+                    textBox.innerHTML += text.charAt(index);
+                    index++;
+                } else {
+                    clearInterval(typingInterval);
+                    typingCursor.style.display = 'none';
+                    showChoices(); // 文字打完显示选项
+                }
+            }, gameData.typingSpeed);
+        }
+
+        // 显示选项
+        function showChoices() {
+            choicesArea.innerHTML = '';
+            choicesArea.style.display = 'flex';
+
+            gameData.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = choice.text;
+                btn.addEventListener('click', () => {
+                    gameData.currentText = choice.nextText;
+                    gameData.currentImage = choice.nextImage;
+                    gameImage.style.backgroundImage = `url(${gameData.currentImage})`;
+                    typeText(gameData.currentText);
+                });
+                choicesArea.appendChild(btn);
+            });
+        }
+
+        // 应用自定义内容
+        applyBtn.addEventListener('click', () => {
+            const customImage = document.getElementById('customImage').value;
+            const customText = document.getElementById('customText').value;
+            const choice1 = document.getElementById('choice1').value;
+            const choice1Text = document.getElementById('choice1Text').value;
+            const choice1Image = document.getElementById('choice1Image').value;
+            const choice2 = document.getElementById('choice2').value;
+            const choice2Text = document.getElementById('choice2Text').value;
+            const choice2Image = document.getElementById('choice2Image').value;
+
+            // 更新游戏数据（有输入则替换，无则保留默认）
+            if (customImage) gameData.currentImage = customImage;
+            if (customText) gameData.currentText = customText;
+            if (choice1 && choice1Text) {
+                gameData.choices[0].text = choice1;
+                gameData.choices[0].nextText = choice1Text;
+                if (choice1Image) gameData.choices[0].nextImage = choice1Image;
+            }
+            if (choice2 && choice2Text) {
+                gameData.choices[1].text = choice2;
+                gameData.choices[1].nextText = choice2Text;
+                if (choice2Image) gameData.choices[1].nextImage = choice2Image;
+            }
+
+            // 重新初始化游戏
+            initGame();
         });
-        
-        // 玩耍动画逻辑
-        playBtn.addEventListener('click', function() {
-            petData.affection += petData.increment;
-            petData.playCount++;
-            
-            petStatic.style.display = 'none';
-            feedAnimation.style.display = 'none';
-            playAnimation.style.display = 'block';
-            playAnimation.currentTime = 0;
-            
-            message.textContent = "🎾 玩耍时间！美少女笑起来超可爱～";
-            updateUI();
-            
-            setTimeout(() => {
-                playAnimation.style.display = 'none';
-                petStatic.style.display = 'block';
-            }, 3000);
+
+        // 存档功能
+        saveBtn.addEventListener('click', () => {
+            localStorage.setItem('gameSave', JSON.stringify(gameData));
+            alert('存档成功！');
         });
-        
-        updateUI();
+
+        // 读档功能
+        loadBtn.addEventListener('click', () => {
+            const savedData = localStorage.getItem('gameSave');
+            if (savedData) {
+                Object.assign(gameData, JSON.parse(savedData));
+                initGame();
+                alert('读档成功！');
+            } else {
+                alert('暂无存档！');
+            }
+        });
+
+        // 启动游戏
+        window.onload = initGame;
     </script>
 </body>
 </html>
