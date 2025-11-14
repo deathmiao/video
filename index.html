@@ -3,69 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自定义打字机文字冒险游戏</title>
+    <title>迷雾森林冒险 - 文字冒险游戏</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Microsoft YaHei', 'SimSun', serif;
         }
 
         body {
-            background-color: #1a1a1a;
-            color: #f0f0f0;
+            background-color: #0f172a;
+            color: #f8fafc;
             min-height: 100vh;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            background-image: url('https://picsum.photos/seed/mist/1920/1080');
+            background-size: cover;
+            background-attachment: fixed;
         }
 
         /* 游戏容器 */
-        .game-container {
+        .game-wrapper {
             width: 100%;
-            max-width: 800px;
-            background-color: #2d2d2d;
-            border-radius: 15px;
+            max-width: 900px;
+            background-color: rgba(15, 23, 42, 0.9);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(148, 163, 184, 0.2);
         }
 
-        /* 游戏图片区 */
-        .game-image {
+        /* 游戏头部 */
+        .game-header {
+            padding: 20px;
+            background-color: rgba(30, 41, 59, 0.8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .status-icon {
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        /* 剧情图片区 */
+        .story-image {
             width: 100%;
-            height: 300px;
+            height: 320px;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            /* 默认图片（可替换） */
-            background-image: url("1763081821758.png");
+            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
         }
 
-        /* 文字显示区 */
-        .text-area {
+        /* 剧情文字区 */
+        .story-area {
             padding: 30px;
-            min-height: 200px;
+            min-height: 220px;
             display: flex;
             align-items: center;
             position: relative;
         }
 
-        .text-box {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            white-space: pre-line;
+        .dialog-box {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            text-align: justify;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
         }
 
-        /* 打字机光标 */
         .typing-cursor {
             display: inline-block;
-            width: 12px;
-            height: 24px;
-            background-color: #f0f0f0;
-            margin-left: 5px;
-            animation: blink 1s infinite;
+            width: 10px;
+            height: 22px;
+            background-color: #f8fafc;
+            margin-left: 6px;
+            animation: blink 0.8s infinite;
         }
 
         @keyframes blink {
@@ -78,293 +114,348 @@
             padding: 0 30px 30px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            display: none; /* 默认隐藏，文字打完显示 */
+            gap: 12px;
+            display: none;
         }
 
         .choice-btn {
-            padding: 12px 20px;
-            background-color: #3d3d3d;
-            border: 2px solid #5d5d5d;
-            border-radius: 8px;
-            color: #f0f0f0;
+            padding: 15px 20px;
+            background-color: rgba(51, 65, 85, 0.7);
+            border: 2px solid rgba(148, 163, 184, 0.4);
+            border-radius: 12px;
+            color: #f8fafc;
             font-size: 1rem;
             text-align: left;
             cursor: pointer;
             transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .choice-btn:hover {
-            background-color: #4d4d4d;
-            border-color: #7d7d7d;
-            transform: translateX(5px);
+            background-color: rgba(96, 165, 250, 0.3);
+            border-color: #38bdf8;
+            transform: translateX(8px);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
         }
 
-        /* 自定义设置区 */
-        .custom-setting {
-            margin-top: 30px;
-            width: 100%;
-            max-width: 800px;
-            background-color: #2d2d2d;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        .choice-btn:active {
+            transform: translateX(4px);
         }
 
-        .setting-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #ffd700;
+        /* 道具栏 */
+        .inventory {
+            padding: 20px 30px;
+            background-color: rgba(30, 41, 59, 0.6);
+            border-top: 1px solid rgba(148, 163, 184, 0.3);
         }
 
-        .setting-group {
+        .inventory-title {
+            font-size: 1.1rem;
             margin-bottom: 15px;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .setting-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 1rem;
+        .items-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        .setting-group input,
-        .setting-group textarea,
-        .setting-group select {
-            width: 100%;
-            padding: 10px;
-            background-color: #3d3d3d;
-            border: 1px solid #5d5d5d;
-            border-radius: 5px;
-            color: #f0f0f0;
-            font-size: 1rem;
-            resize: vertical;
-        }
-
-        .setting-group textarea {
-            min-height: 100px;
-        }
-
-        .apply-btn {
-            width: 100%;
-            padding: 15px;
-            background-color: #ffd700;
-            border: none;
+        .item-card {
+            padding: 8px 15px;
+            background-color: rgba(51, 65, 85, 0.5);
             border-radius: 8px;
-            color: #1a1a1a;
-            font-size: 1.2rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .item-icon {
+            color: #22c55e;
+        }
+
+        /* 功能按钮区 */
+        .func-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .func-btn {
+            padding: 12px 25px;
+            background-color: rgba(51, 65, 85, 0.8);
+            border: 2px solid rgba(148, 163, 184, 0.4);
+            border-radius: 10px;
+            color: #f8fafc;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .func-btn:hover {
+            background-color: rgba(96, 165, 250, 0.4);
+            border-color: #38bdf8;
+        }
+
+        /* 结局弹窗 */
+        .ending-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 600px;
+            background-color: #1e293b;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid #38bdf8;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+        }
+
+        .ending-title {
+            font-size: 2rem;
+            color: #fbbf24;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        .ending-desc {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #e2e8f0;
+        }
+
+        .restart-btn {
+            padding: 15px 30px;
+            background-color: #38bdf8;
+            border: none;
+            border-radius: 10px;
+            color: #0f172a;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
         }
 
-        .apply-btn:hover {
-            background-color: #ffc107;
-            transform: translateY(-2px);
+        .restart-btn:hover {
+            background-color: #0ea5e9;
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
         }
 
-        /* 存档区 */
-        .save-area {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-        }
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .game-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
 
-        .save-btn, .load-btn {
-            padding: 10px 20px;
-            background-color: #3d3d3d;
-            border: 1px solid #5d5d5d;
-            border-radius: 5px;
-            color: #f0f0f0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+            .status-bar {
+                justify-content: center;
+            }
 
-        .save-btn:hover, .load-btn:hover {
-            background-color: #4d4d4d;
+            .story-image {
+                height: 220px;
+            }
+
+            .story-area {
+                padding: 20px;
+                min-height: 180px;
+            }
+
+            .dialog-box {
+                font-size: 1rem;
+                line-height: 1.8;
+            }
+
+            .choices-area {
+                padding: 0 20px 20px;
+            }
+
+            .choice-btn {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+            }
+
+            .inventory {
+                padding: 15px 20px;
+            }
+
+            .func-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
     </style>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="game-container">
-        <!-- 游戏图片（可自定义） -->
-        <div class="game-image" id="gameImage"></div>
-        <!-- 文字显示区 -->
-        <div class="text-area">
-            <div class="text-box" id="textBox"></div>
+    <div class="game-wrapper">
+        <!-- 游戏头部 -->
+        <div class="game-header">
+            <h1 class="game-title">迷雾森林冒险</h1>
+            <div class="status-bar">
+                <div class="status-item">
+                    <<i class="fas fa-compass status-icon"></</i>
+                    <span>进度：1%</span>
+                </div>
+                <div class="status-item">
+                    <<i class="fas fa-heart status-icon"></</i>
+                    <span>体力：100</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 剧情图片 -->
+        <div class="story-image" id="storyImage"></div>
+
+        <!-- 剧情文字区 -->
+        <div class="story-area">
+            <div class="dialog-box" id="dialogBox"></div>
             <div class="typing-cursor" id="typingCursor"></div>
         </div>
+
         <!-- 选项区 -->
         <div class="choices-area" id="choicesArea"></div>
+
+        <!-- 道具栏 -->
+        <div class="inventory">
+            <h3 class="inventory-title">
+                <<i class="fas fa-backpack"></</i> 背包道具
+            </h3>
+            <div class="items-container" id="itemsContainer">
+                <div class="item-card">
+                    <<i class="fas fa-leaf item-icon"></</i>
+                    <span>干燥的树叶</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- 自定义设置区 -->
-    <div class="custom-setting">
-        <h3 class="setting-title">自定义游戏内容</h3>
-        <div class="setting-group">
-            <label for="customImage">背景图片链接：</label>
-            <input type="text" id="customImage" placeholder="输入图片URL（支持JPG/PNG）">
-        </div>
-        <div class="setting-group">
-            <label for="customText">剧情文字：</label>
-            <textarea id="customText" placeholder="输入当前剧情文字（换行用Enter）">你醒来时，发现自己身处一片陌生的森林。阳光透过树叶的缝隙洒下，远处传来溪流的声音。</textarea>
-        </div>
-        <div class="setting-group">
-            <label for="choice1">选项1文字：</label>
-            <input type="text" id="choice1" value="朝着溪流的方向走去">
-        </div>
-        <div class="setting-group">
-            <label for="choice1Text">选项1后续剧情：</label>
-            <textarea id="choice1Text" placeholder="输入选项1的后续剧情">你沿着声音找到了清澈的溪流，溪边坐着一位白发少女，她笑着向你挥手。</textarea>
-        </div>
-        <div class="setting-group">
-            <label for="choice1Image">选项1背景图：</label>
-            <input type="text" id="choice1Image" placeholder="输入图片URL" value="https://picsum.photos/seed/stream/800/300">
-        </div>
-        <div class="setting-group">
-            <label for="choice2">选项2文字：</label>
-            <input type="text" id="choice2" value="深入森林探索">
-        </div>
-        <div class="setting-group">
-            <label for="choice2Text">选项2后续剧情：</label>
-            <textarea id="choice2Text" placeholder="输入选项2的后续剧情">你走进森林深处，发现了一座古老的石碑，上面刻着神秘的符文。</textarea>
-        </div>
-        <div class="setting-group">
-            <label for="choice2Image">选项2背景图：</label>
-            <input type="text" id="choice2Image" placeholder="输入图片URL" value="https://picsum.photos/seed/stone/800/300">
-        </div>
-        <button class="apply-btn" id="applyBtn">应用自定义内容</button>
+    <!-- 功能按钮区 -->
+    <div class="func-buttons">
+        <button class="func-btn" id="saveBtn">
+            <<i class="fas fa-save"></</i> 存档
+        </button>
+        <button class="func-btn" id="loadBtn">
+            <<i class="fas fa-load"></</i> 读档
+        </button>
+        <button class="func-btn" id="restartBtn">
+            <<i class="fas fa-redo"></</i> 重启游戏
+        </button>
     </div>
 
-    <!-- 存档区 -->
-    <div class="save-area">
-        <button class="save-btn" id="saveBtn">存档</button>
-        <button class="load-btn" id="loadBtn">读档</button>
+    <!-- 结局弹窗 -->
+    <div class="ending-modal" id="endingModal">
+        <div class="modal-content">
+            <h2 class="ending-title" id="endingTitle"></h2>
+            <p class="ending-desc" id="endingDesc"></p>
+            <button class="restart-btn" id="modalRestartBtn">重新开始冒险</button>
+        </div>
     </div>
 
     <script>
         // 游戏核心数据
         const gameData = {
-            currentText: "你醒来时，发现自己身处一片陌生的森林。阳光透过树叶的缝隙洒下，远处传来溪流的声音。",
-            currentImage: "https://picsum.photos/seed/adventure/800/300",
-            choices: [
-                {
-                    text: "朝着溪流的方向走去",
-                    nextText: "你沿着声音找到了清澈的溪流，溪边坐着一位白发少女，她笑着向你挥手。",
-                    nextImage: "https://picsum.photos/seed/stream/800/300"
+            currentStage: "start", // 当前剧情阶段
+            inventory: ["干燥的树叶"], // 背包道具
+            progress: 1, // 游戏进度
+            stamina: 100, // 体力值
+            // 剧情阶段配置
+            stages: {
+                start: {
+                    image: "https://picsum.photos/seed/forest/900/320",
+                    text: "你在一片弥漫着浓雾的森林中醒来，头痛欲裂，完全不记得自己是怎么来到这里的。四周静得可怕，只有风吹过树叶的沙沙声。雾气像有生命般流动，能见度不足五米。你摸了摸口袋，只找到几片干燥的树叶。现在，你必须做出选择，找到离开森林的路。",
+                    choices: [
+                        {
+                            text: "沿着隐约可见的小路前行",
+                            nextStage: "path",
+                            staminaCost: 10
+                        },
+                        {
+                            text: "朝着雾气较淡的东方探索",
+                            nextStage: "east",
+                            staminaCost: 15
+                        },
+                        {
+                            text: "在原地生火等待救援（需要干燥树叶）",
+                            nextStage: "fire",
+                            requireItem: "干燥的树叶",
+                            staminaCost: 5
+                        }
+                    ]
                 },
-                {
-                    text: "深入森林探索",
-                    nextText: "你走进森林深处，发现了一座古老的石碑，上面刻着神秘的符文。",
-                    nextImage: "https://picsum.photos/seed/stone/800/300"
-                }
-            ],
-            typingSpeed: 50 // 打字速度（毫秒/字）
-        };
-
-        // DOM元素
-        const textBox = document.getElementById('textBox');
-        const typingCursor = document.getElementById('typingCursor');
-        const choicesArea = document.getElementById('choicesArea');
-        const gameImage = document.getElementById('gameImage');
-        const applyBtn = document.getElementById('applyBtn');
-        const saveBtn = document.getElementById('saveBtn');
-        const loadBtn = document.getElementById('loadBtn');
-
-        // 初始化游戏
-        function initGame() {
-            gameImage.style.backgroundImage = `url(${gameData.currentImage})`;
-            typeText(gameData.currentText);
-        }
-
-        // 打字机效果
-        function typeText(text) {
-            textBox.innerHTML = '';
-            typingCursor.style.display = 'inline-block';
-            choicesArea.style.display = 'none';
-            let index = 0;
-
-            const typingInterval = setInterval(() => {
-                if (index < text.length) {
-                    textBox.innerHTML += text.charAt(index);
-                    index++;
-                } else {
-                    clearInterval(typingInterval);
-                    typingCursor.style.display = 'none';
-                    showChoices(); // 文字打完显示选项
-                }
-            }, gameData.typingSpeed);
-        }
-
-        // 显示选项
-        function showChoices() {
-            choicesArea.innerHTML = '';
-            choicesArea.style.display = 'flex';
-
-            gameData.choices.forEach(choice => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.textContent = choice.text;
-                btn.addEventListener('click', () => {
-                    gameData.currentText = choice.nextText;
-                    gameData.currentImage = choice.nextImage;
-                    gameImage.style.backgroundImage = `url(${gameData.currentImage})`;
-                    typeText(gameData.currentText);
-                });
-                choicesArea.appendChild(btn);
-            });
-        }
-
-        // 应用自定义内容
-        applyBtn.addEventListener('click', () => {
-            const customImage = document.getElementById('customImage').value;
-            const customText = document.getElementById('customText').value;
-            const choice1 = document.getElementById('choice1').value;
-            const choice1Text = document.getElementById('choice1Text').value;
-            const choice1Image = document.getElementById('choice1Image').value;
-            const choice2 = document.getElementById('choice2').value;
-            const choice2Text = document.getElementById('choice2Text').value;
-            const choice2Image = document.getElementById('choice2Image').value;
-
-            // 更新游戏数据（有输入则替换，无则保留默认）
-            if (customImage) gameData.currentImage = customImage;
-            if (customText) gameData.currentText = customText;
-            if (choice1 && choice1Text) {
-                gameData.choices[0].text = choice1;
-                gameData.choices[0].nextText = choice1Text;
-                if (choice1Image) gameData.choices[0].nextImage = choice1Image;
-            }
-            if (choice2 && choice2Text) {
-                gameData.choices[1].text = choice2;
-                gameData.choices[1].nextText = choice2Text;
-                if (choice2Image) gameData.choices[1].nextImage = choice2Image;
-            }
-
-            // 重新初始化游戏
-            initGame();
-        });
-
-        // 存档功能
-        saveBtn.addEventListener('click', () => {
-            localStorage.setItem('gameSave', JSON.stringify(gameData));
-            alert('存档成功！');
-        });
-
-        // 读档功能
-        loadBtn.addEventListener('click', () => {
-            const savedData = localStorage.getItem('gameSave');
-            if (savedData) {
-                Object.assign(gameData, JSON.parse(savedData));
-                initGame();
-                alert('读档成功！');
-            } else {
-                alert('暂无存档！');
-            }
-        });
-
-        // 启动游戏
-        window.onload = initGame;
-    </script>
-</body>
-</html>
+                path: {
+                    image: "https://picsum.photos/seed/path/900/320",
+                    text: "你沿着小路走了约半小时，路面越来越窄，两旁的树木也变得扭曲怪异。突然，你发现前方的树干上刻着奇怪的符号，像是某种警告。就在这时，身后传来轻微的脚步声，雾气中似乎有什么东西在跟着你。",
+                    choices: [
+                        {
+                            text: "加快脚步逃离",
+                            nextStage: "escape",
+                            staminaCost: 20
+                        },
+                        {
+                            text: "转身查看跟踪者",
+                            nextStage: "confront",
+                            staminaCost: 10
+                        },
+                        {
+                            text: "躲到旁边的灌木丛中",
+                            nextStage: "hide",
+                            staminaCost: 5
+                        }
+                    ]
+                },
+                east: {
+                    image: "https://picsum.photos/seed/east/900/320",
+                    text: "东方的雾气果然越来越淡，你逐渐能看到远处的山峦轮廓。走着走着，你发现一片开满蓝色野花的空地，空地上有一口古老的水井。井边放着一个生锈的水桶，桶上系着结实的绳子。",
+                    choices: [
+                        {
+                            text: "打水喝补充体力",
+                            nextStage: "drink",
+                            staminaCost: 5,
+                            gainStamina: 30
+                        },
+                        {
+                            text: "调查水井深处",
+                            nextStage: "well",
+                            staminaCost: 15
+                        },
+                        {
+                            text: "采摘蓝色野花（可能有用）",
+                            nextStage: "flower",
+                            staminaCost: 5,
+                            gainItem: "蓝色野花"
+                        }
+                    ]
+                },
+                fire: {
+                    image: "https://picsum.photos/seed/fire/900/320",
+                    text: "你用干燥的树叶和石头摩擦生火，温暖的火焰驱散了周围的雾气和寒意。火光吸引了一只通体雪白的小狐狸，它小心翼翼地靠近，眼神中带着灵性。小狐狸嘴里叼着一枚发光的果实，轻轻放在你面前。",
+                    choices: [
+                        {
+                            text: "收下果实并感谢小狐狸",
+                            nextStage: "foxFruit",
+                            staminaCost: 0,
+                            gainItem: "发光果实"
+                        },
+                        {
