@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>机器人问候</title>
+    <title>虚拟宠物养成</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
         }
         
         body {
@@ -17,115 +17,231 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             padding: 20px;
         }
         
         .container {
             width: 100%;
-            max-width: 500px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
             padding: 30px;
             text-align: center;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2.2rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .robot {
-            position: relative;
-            width: 200px;
-            height: 250px;
-            margin: 0 auto 40px;
-        }
-        
-        .head {
-            width: 180px;
-            height: 150px;
-            background: #4a4a4a;
-            border-radius: 40% 40% 30% 30%;
-            margin: 0 auto;
-            position: relative;
-            box-shadow: 0 8px 0 #333;
-        }
-        
-        .face {
-            width: 140px;
-            height: 100px;
-            background: #f0f0f0;
-            border-radius: 20px;
-            position: absolute;
-            top: 25px;
-            left: 20px;
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-        }
-        
-        .eye {
-            width: 30px;
-            height: 40px;
-            background: #4a4a4a;
-            border-radius: 50%;
             position: relative;
             overflow: hidden;
         }
         
-        .eye::after {
+        h1 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        
+        .pet-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+        }
+        
+        .pet {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .pet-body {
+            width: 180px;
+            height: 180px;
+            background: #ffcc5c;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            box-shadow: 0 8px 0 #e6b445;
+        }
+        
+        .pet-face {
+            position: absolute;
+            width: 140px;
+            height: 100px;
+            top: 50px;
+            left: 30px;
+        }
+        
+        .pet-eye {
+            width: 25px;
+            height: 35px;
+            background: #333;
+            border-radius: 50%;
+            position: absolute;
+            top: 20px;
+        }
+        
+        .pet-eye.left {
+            left: 25px;
+        }
+        
+        .pet-eye.right {
+            right: 25px;
+        }
+        
+        .pet-eye::after {
             content: '';
             position: absolute;
-            width: 15px;
-            height: 15px;
+            width: 10px;
+            height: 10px;
             background: white;
             border-radius: 50%;
             top: 8px;
-            left: 7px;
+            left: 5px;
         }
         
-        .mouth {
-            width: 80px;
+        .pet-mouth {
+            width: 40px;
             height: 20px;
-            background: #4a4a4a;
-            border-radius: 10px;
+            background: #ff6b6b;
+            border-radius: 0 0 20px 20px;
             position: absolute;
-            bottom: 20px;
+            bottom: 10px;
             left: 50px;
             transition: all 0.3s ease;
         }
         
-        .speaking .mouth {
-            animation: speak 0.5s infinite alternate;
+        .happy .pet-mouth {
+            border-radius: 20px 20px 0 0;
+            height: 25px;
         }
         
-        @keyframes speak {
-            0% { height: 10px; }
-            100% { height: 30px; }
+        .pet-ear {
+            width: 40px;
+            height: 50px;
+            background: #ffcc5c;
+            border-radius: 50%;
+            position: absolute;
+            top: -10px;
+            z-index: -1;
         }
         
-        .body {
-            width: 160px;
-            height: 80px;
-            background: #4a4a4a;
-            border-radius: 20px;
-            margin: 10px auto 0;
+        .pet-ear.left {
+            left: 20px;
+            transform: rotate(-20deg);
+        }
+        
+        .pet-ear.right {
+            right: 20px;
+            transform: rotate(20deg);
+        }
+        
+        .pet-limb {
+            width: 30px;
+            height: 50px;
+            background: #ffcc5c;
+            border-radius: 15px;
+            position: absolute;
+            bottom: -20px;
+        }
+        
+        .pet-limb.left {
+            left: 40px;
+        }
+        
+        .pet-limb.right {
+            right: 40px;
+        }
+        
+        .pet-interaction {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .food {
+            width: 40px;
+            height: 40px;
+            background: #ff9a9e;
+            border-radius: 50%;
+            top: 100px;
+            left: 80px;
+            box-shadow: 0 4px 0 #e6898b;
+        }
+        
+        .ball {
+            width: 40px;
+            height: 40px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            top: 100px;
+            right: 80px;
+            box-shadow: 0 4px 0 #3bb4ac;
+        }
+        
+        .stats {
+            background: #f8f8f8;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .affection-meter {
+            margin-bottom: 15px;
+        }
+        
+        .affection-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .progress-bar {
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #ff9a9e, #ff6b6b);
+            width: 0%;
+            border-radius: 12px;
+            transition: width 0.5s ease;
             position: relative;
-            box-shadow: 0 8px 0 #333;
         }
         
-        .controls {
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .actions {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
+            gap: 30px;
+            margin-top: 20px;
         }
         
-        button {
+        .action-btn {
             padding: 15px 30px;
             font-size: 1.2rem;
             border: none;
@@ -137,81 +253,100 @@
             color: white;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .hello-btn {
-            background: linear-gradient(to right, #00b09b, #96c93d);
+        .feed-btn {
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
         }
         
-        .bye-btn {
-            background: linear-gradient(to right, #ff5e62, #ff9966);
+        .play-btn {
+            background: linear-gradient(to right, #4ecdc4, #a3d9c9);
         }
         
-        button:hover {
+        .action-btn:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         
-        button:active {
+        .action-btn:active {
             transform: translateY(0);
         }
         
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .message {
-            margin-top: 30px;
+            margin-top: 20px;
             padding: 15px;
-            background: #f8f8f8;
+            background: #f0f0f0;
             border-radius: 10px;
             min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            color: #333;
+            color: #555;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
         
-        .bubble {
-            position: relative;
-            background: #f0f0f0;
-            border-radius: 10px;
-            padding: 15px;
+        .interaction-animation {
+            animation: bounce 0.5s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .pet-status {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
             margin-top: 20px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
         }
         
-        .bubble::after {
-            content: '';
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            margin-left: -10px;
-            border-width: 10px;
-            border-style: solid;
-            border-color: transparent transparent #f0f0f0 transparent;
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #555;
         }
         
-        .bubble.show {
-            opacity: 1;
-            transform: translateY(0);
+        .status-icon {
+            font-size: 1.5rem;
         }
         
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
             .container {
                 padding: 20px;
             }
             
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
-            .robot {
-                transform: scale(0.8);
+            .pet-container {
+                width: 250px;
+                height: 250px;
             }
             
-            button {
+            .actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .action-btn {
                 padding: 12px 25px;
                 font-size: 1rem;
             }
@@ -220,92 +355,166 @@
 </head>
 <body>
     <div class="container">
-        <h1>机器人问候</h1>
+        <h1>虚拟宠物养成</h1>
+        <p class="subtitle">通过投喂和玩耍增加与宠物的好感度吧！</p>
         
-        <div class="robot">
-            <div class="head">
-                <div class="face">
-                    <div class="eye"></div>
-                    <div class="eye"></div>
+        <div class="pet-container">
+            <div class="pet" id="pet">
+                <div class="pet-ear left"></div>
+                <div class="pet-ear right"></div>
+                <div class="pet-body"></div>
+                <div class="pet-face">
+                    <div class="pet-eye left"></div>
+                    <div class="pet-eye right"></div>
+                    <div class="pet-mouth"></div>
                 </div>
-                <div class="mouth"></div>
+                <div class="pet-limb left"></div>
+                <div class="pet-limb right"></div>
+                
+                <div class="pet-interaction food" id="food"></div>
+                <div class="pet-interaction ball" id="ball"></div>
             </div>
-            <div class="body"></div>
         </div>
         
-        <div class="bubble" id="bubble"></div>
+        <div class="stats">
+            <div class="affection-meter">
+                <div class="affection-label">
+                    <span>好感度</span>
+                    <span id="affectionPercent">0.0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="affectionProgress">
+                        <div class="progress-text" id="progressText">0.0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pet-status">
+                <div class="status-item">
+                    <span class="status-icon">🍖</span>
+                    <span id="feedCount">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">🎾</span>
+                    <span id="playCount">0</span>
+                </div>
+            </div>
+        </div>
         
-        <div class="controls">
-            <button class="hello-btn" id="helloBtn">你好</button>
-            <button class="bye-btn" id="byeBtn">再见</button>
+        <div class="actions">
+            <button class="action-btn feed-btn" id="feedBtn">
+                <span>🍖</span> 投喂
+            </button>
+            <button class="action-btn play-btn" id="playBtn">
+                <span>🎾</span> 玩耍
+            </button>
         </div>
         
         <div class="message" id="message">
-            点击按钮与机器人互动
+            欢迎！点击按钮与你的宠物互动吧！
         </div>
     </div>
 
     <script>
-        const helloBtn = document.getElementById('helloBtn');
-        const byeBtn = document.getElementById('byeBtn');
+        // 宠物状态数据
+        const petData = {
+            affection: 0, // 当前好感度
+            maxAffection: 100000, // 最大好感度
+            feedCount: 0, // 投喂次数
+            playCount: 0, // 玩耍次数
+            increment: 0.1 // 每次互动增加的好感度百分比
+        };
+        
+        // DOM元素
+        const pet = document.getElementById('pet');
+        const food = document.getElementById('food');
+        const ball = document.getElementById('ball');
+        const affectionPercent = document.getElementById('affectionPercent');
+        const affectionProgress = document.getElementById('affectionProgress');
+        const progressText = document.getElementById('progressText');
+        const feedBtn = document.getElementById('feedBtn');
+        const playBtn = document.getElementById('playBtn');
         const message = document.getElementById('message');
-        const bubble = document.getElementById('bubble');
-        const robot = document.querySelector('.robot');
-        const mouth = document.querySelector('.mouth');
+        const feedCount = document.getElementById('feedCount');
+        const playCount = document.getElementById('playCount');
         
-        // 创建语音合成对象
-        const synth = window.speechSynthesis;
-        
-        // 说中文的函数
-        function speakText(text) {
-            if (synth.speaking) {
-                synth.cancel();
+        // 更新UI显示
+        function updateUI() {
+            // 更新好感度百分比
+            const percent = (petData.affection / petData.maxAffection * 100).toFixed(1);
+            affectionPercent.textContent = `${percent}%`;
+            progressText.textContent = `${percent}%`;
+            
+            // 更新进度条
+            affectionProgress.style.width = `${percent}%`;
+            
+            // 更新互动次数
+            feedCount.textContent = petData.feedCount;
+            playCount.textContent = petData.playCount;
+            
+            // 根据好感度改变宠物表情
+            if (petData.affection > 0) {
+                pet.classList.add('happy');
+            } else {
+                pet.classList.remove('happy');
             }
             
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'zh-CN';
-            utterance.rate = 1;
-            utterance.pitch = 1;
-            
-            // 开始说话时添加动画
-            utterance.onstart = function() {
-                robot.classList.add('speaking');
-                message.textContent = "机器人正在说话...";
-            };
-            
-            // 说话结束时移除动画
-            utterance.onend = function() {
-                robot.classList.remove('speaking');
-                message.textContent = "机器人说完了";
-                setTimeout(() => {
-                    message.textContent = "点击按钮与机器人互动";
-                }, 2000);
-            };
-            
-            synth.speak(utterance);
+            // 检查是否达到最大好感度
+            if (petData.affection >= petData.maxAffection) {
+                message.textContent = "🎉 恭喜！你已与宠物达到最大好感度！";
+                feedBtn.disabled = true;
+                playBtn.disabled = true;
+            }
         }
         
-        // 你好按钮点击事件
-        helloBtn.addEventListener('click', function() {
-            bubble.textContent = "你好！很高兴见到你！";
-            bubble.classList.add('show');
-            speakText("你好！很高兴见到你！");
+        // 投喂功能
+        feedBtn.addEventListener('click', function() {
+            // 增加好感度
+            petData.affection += petData.increment;
+            petData.feedCount++;
             
+            // 显示投喂动画
+            food.style.opacity = '1';
+            pet.classList.add('interaction-animation');
+            
+            // 更新消息
+            message.textContent = "🍖 你投喂了宠物，好感度增加了0.1%！";
+            
+            // 更新UI
+            updateUI();
+            
+            // 重置动画
             setTimeout(() => {
-                bubble.classList.remove('show');
-            }, 3000);
+                food.style.opacity = '0';
+                pet.classList.remove('interaction-animation');
+            }, 1000);
         });
         
-        // 再见按钮点击事件
-        byeBtn.addEventListener('click', function() {
-            bubble.textContent = "再见！期待下次见面！";
-            bubble.classList.add('show');
-            speakText("再见！期待下次见面！");
+        // 玩耍功能
+        playBtn.addEventListener('click', function() {
+            // 增加好感度
+            petData.affection += petData.increment;
+            petData.playCount++;
             
+            // 显示玩耍动画
+            ball.style.opacity = '1';
+            pet.classList.add('interaction-animation');
+            
+            // 更新消息
+            message.textContent = "🎾 你与宠物玩耍，好感度增加了0.1%！";
+            
+            // 更新UI
+            updateUI();
+            
+            // 重置动画
             setTimeout(() => {
-                bubble.classList.remove('show');
-            }, 3000);
+                ball.style.opacity = '0';
+                pet.classList.remove('interaction-animation');
+            }, 1000);
         });
+        
+        // 初始化
+        updateUI();
     </script>
 </body>
 </html>
