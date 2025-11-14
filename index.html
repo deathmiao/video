@@ -3,459 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>迷雾森林冒险 - 文字冒险游戏</title>
+    <title>二次元抽签1-6（含名言）</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', 'SimSun', serif;
+            font-family: "Comic Sans MS", "微软雅黑", sans-serif;
         }
-
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-image: url('https://picsum.photos/seed/mist/1920/1080');
-            background-size: cover;
-            background-attachment: fixed;
-        }
-
-        /* 游戏容器 */
-        .game-wrapper {
-            width: 100%;
-            max-width: 900px;
-            background-color: rgba(15, 23, 42, 0.9);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-        }
-
-        /* 游戏头部 */
-        .game-header {
-            padding: 20px;
-            background-color: rgba(30, 41, 59, 0.8);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
-        }
-
-        .game-title {
-            font-size: 1.8rem;
-            color: #38bdf8;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
-        }
-
-        .status-bar {
-            display: flex;
-            gap: 20px;
-        }
-
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
-        .status-icon {
-            color: #fbbf24;
-            font-size: 1.2rem;
-        }
-
-        /* 剧情图片区 */
-        .story-image {
-            width: 100%;
-            height: 320px;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
-        }
-
-        /* 剧情文字区 */
-        .story-area {
-            padding: 30px;
-            min-height: 220px;
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        .dialog-box {
-            font-size: 1.1rem;
-            line-height: 1.9;
-            text-align: justify;
-            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-        }
-
-        .typing-cursor {
-            display: inline-block;
-            width: 10px;
-            height: 22px;
-            background-color: #f8fafc;
-            margin-left: 6px;
-            animation: blink 0.8s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* 选项区 */
-        .choices-area {
-            padding: 0 30px 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            display: none;
-        }
-
-        .choice-btn {
-            padding: 15px 20px;
-            background-color: rgba(51, 65, 85, 0.7);
-            border: 2px solid rgba(148, 163, 184, 0.4);
-            border-radius: 12px;
-            color: #f8fafc;
-            font-size: 1rem;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        .choice-btn:hover {
-            background-color: rgba(96, 165, 250, 0.3);
-            border-color: #38bdf8;
-            transform: translateX(8px);
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
-        }
-
-        .choice-btn:active {
-            transform: translateX(4px);
-        }
-
-        /* 道具栏 */
-        .inventory {
-            padding: 20px 30px;
-            background-color: rgba(30, 41, 59, 0.6);
-            border-top: 1px solid rgba(148, 163, 184, 0.3);
-        }
-
-        .inventory-title {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            color: #fbbf24;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .items-container {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .item-card {
-            padding: 8px 15px;
-            background-color: rgba(51, 65, 85, 0.5);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(148, 163, 184, 0.3);
-        }
-
-        .item-icon {
-            color: #22c55e;
-        }
-
-        /* 功能按钮区 */
-        .func-buttons {
-            margin-top: 25px;
-            display: flex;
-            gap: 15px;
-        }
-
-        .func-btn {
-            padding: 12px 25px;
-            background-color: rgba(51, 65, 85, 0.8);
-            border: 2px solid rgba(148, 163, 184, 0.4);
-            border-radius: 10px;
-            color: #f8fafc;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .func-btn:hover {
-            background-color: rgba(96, 165, 250, 0.4);
-            border-color: #38bdf8;
-        }
-
-        /* 结局弹窗 */
-        .ending-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
             justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none;
+            padding: 20px;
         }
-
-        .modal-content {
-            width: 90%;
-            max-width: 600px;
-            background-color: #1e293b;
-            border-radius: 20px;
+        .container {
+            background: rgba(255, 255, 255, 0.9);
             padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(255, 100, 150, 0.3);
             text-align: center;
-            border: 2px solid #38bdf8;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+            max-width: 500px;
+            width: 100%;
         }
-
-        .ending-title {
-            font-size: 2rem;
-            color: #fbbf24;
+        h1 {
+            color: #e63946;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-        .ending-desc {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 30px;
-            color: #e2e8f0;
-        }
-
-        .restart-btn {
-            padding: 15px 30px;
-            background-color: #38bdf8;
-            border: none;
-            border-radius: 10px;
-            color: #0f172a;
-            font-size: 1.1rem;
+        .number-box {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #457b9d, #1d3557);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            box-shadow: 0 0 20px rgba(69, 123, 157, 0.5);
+            color: white;
+            font-size: 80px;
             font-weight: bold;
-            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+        .number-box.animate {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 0 30px rgba(230, 57, 70, 0.7);
+        }
+        .quote-box {
+            background: rgba(250, 208, 196, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1d3557;
+            font-size: 18px;
+            line-height: 1.6;
             transition: all 0.3s ease;
         }
-
-        .restart-btn:hover {
-            background-color: #0ea5e9;
-            transform: translateY(-3px);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+        #drawBtn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
-
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .game-header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-
-            .status-bar {
-                justify-content: center;
-            }
-
-            .story-image {
-                height: 220px;
-            }
-
-            .story-area {
-                padding: 20px;
-                min-height: 180px;
-            }
-
-            .dialog-box {
-                font-size: 1rem;
-                line-height: 1.8;
-            }
-
-            .choices-area {
-                padding: 0 20px 20px;
-            }
-
-            .choice-btn {
-                padding: 12px 15px;
-                font-size: 0.95rem;
-            }
-
-            .inventory {
-                padding: 15px 20px;
-            }
-
-            .func-buttons {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
+        #drawBtn:hover {
+            background: #ff4949;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 73, 73, 0.6);
+        }
+        .tip {
+            color: #666;
+            margin-top: 15px;
+            font-size: 16px;
         }
     </style>
-    <!-- 引入图标库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="game-wrapper">
-        <!-- 游戏头部 -->
-        <div class="game-header">
-            <h1 class="game-title">迷雾森林冒险</h1>
-            <div class="status-bar">
-                <div class="status-item">
-                    <<i class="fas fa-compass status-icon"></</i>
-                    <span>进度：1%</span>
-                </div>
-                <div class="status-item">
-                    <<i class="fas fa-heart status-icon"></</i>
-                    <span>体力：100</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 剧情图片 -->
-        <div class="story-image" id="storyImage"></div>
-
-        <!-- 剧情文字区 -->
-        <div class="story-area">
-            <div class="dialog-box" id="dialogBox"></div>
-            <div class="typing-cursor" id="typingCursor"></div>
-        </div>
-
-        <!-- 选项区 -->
-        <div class="choices-area" id="choicesArea"></div>
-
-        <!-- 道具栏 -->
-        <div class="inventory">
-            <h3 class="inventory-title">
-                <<i class="fas fa-backpack"></</i> 背包道具
-            </h3>
-            <div class="items-container" id="itemsContainer">
-                <div class="item-card">
-                    <<i class="fas fa-leaf item-icon"></</i>
-                    <span>干燥的树叶</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 功能按钮区 -->
-    <div class="func-buttons">
-        <button class="func-btn" id="saveBtn">
-            <<i class="fas fa-save"></</i> 存档
-        </button>
-        <button class="func-btn" id="loadBtn">
-            <<i class="fas fa-load"></</i> 读档
-        </button>
-        <button class="func-btn" id="restartBtn">
-            <<i class="fas fa-redo"></</i> 重启游戏
-        </button>
-    </div>
-
-    <!-- 结局弹窗 -->
-    <div class="ending-modal" id="endingModal">
-        <div class="modal-content">
-            <h2 class="ending-title" id="endingTitle"></h2>
-            <p class="ending-desc" id="endingDesc"></p>
-            <button class="restart-btn" id="modalRestartBtn">重新开始冒险</button>
-        </div>
+    <div class="container">
+        <h1>✨ 二次元抽签机 ✨</h1>
+        <div class="number-box" id="resultBox">?</div>
+        <div class="quote-box" id="quoteBox">点击按钮，解锁你的专属数字与名言～</div>
+        <button id="drawBtn">点击抽取1-6数字</button>
+        <p class="tip">命运的齿轮已经转动，每一次抽签都是独一无二的邂逅～</p>
     </div>
 
     <script>
-        // 游戏核心数据
-        const gameData = {
-            currentStage: "start", // 当前剧情阶段
-            inventory: ["干燥的树叶"], // 背包道具
-            progress: 1, // 游戏进度
-            stamina: 100, // 体力值
-            // 剧情阶段配置
-            stages: {
-                start: {
-                    image: "https://picsum.photos/seed/forest/900/320",
-                    text: "你在一片弥漫着浓雾的森林中醒来，头痛欲裂，完全不记得自己是怎么来到这里的。四周静得可怕，只有风吹过树叶的沙沙声。雾气像有生命般流动，能见度不足五米。你摸了摸口袋，只找到几片干燥的树叶。现在，你必须做出选择，找到离开森林的路。",
-                    choices: [
-                        {
-                            text: "沿着隐约可见的小路前行",
-                            nextStage: "path",
-                            staminaCost: 10
-                        },
-                        {
-                            text: "朝着雾气较淡的东方探索",
-                            nextStage: "east",
-                            staminaCost: 15
-                        },
-                        {
-                            text: "在原地生火等待救援（需要干燥树叶）",
-                            nextStage: "fire",
-                            requireItem: "干燥的树叶",
-                            staminaCost: 5
-                        }
-                    ]
-                },
-                path: {
-                    image: "https://picsum.photos/seed/path/900/320",
-                    text: "你沿着小路走了约半小时，路面越来越窄，两旁的树木也变得扭曲怪异。突然，你发现前方的树干上刻着奇怪的符号，像是某种警告。就在这时，身后传来轻微的脚步声，雾气中似乎有什么东西在跟着你。",
-                    choices: [
-                        {
-                            text: "加快脚步逃离",
-                            nextStage: "escape",
-                            staminaCost: 20
-                        },
-                        {
-                            text: "转身查看跟踪者",
-                            nextStage: "confront",
-                            staminaCost: 10
-                        },
-                        {
-                            text: "躲到旁边的灌木丛中",
-                            nextStage: "hide",
-                            staminaCost: 5
-                        }
-                    ]
-                },
-                east: {
-                    image: "https://picsum.photos/seed/east/900/320",
-                    text: "东方的雾气果然越来越淡，你逐渐能看到远处的山峦轮廓。走着走着，你发现一片开满蓝色野花的空地，空地上有一口古老的水井。井边放着一个生锈的水桶，桶上系着结实的绳子。",
-                    choices: [
-                        {
-                            text: "打水喝补充体力",
-                            nextStage: "drink",
-                            staminaCost: 5,
-                            gainStamina: 30
-                        },
-                        {
-                            text: "调查水井深处",
-                            nextStage: "well",
-                            staminaCost: 15
-                        },
-                        {
-                            text: "采摘蓝色野花（可能有用）",
-                            nextStage: "flower",
-                            staminaCost: 5,
-                            gainItem: "蓝色野花"
-                        }
-                    ]
-                },
-                fire: {
-                    image: "https://picsum.photos/seed/fire/900/320",
-                    text: "你用干燥的树叶和石头摩擦生火，温暖的火焰驱散了周围的雾气和寒意。火光吸引了一只通体雪白的小狐狸，它小心翼翼地靠近，眼神中带着灵性。小狐狸嘴里叼着一枚发光的果实，轻轻放在你面前。",
-                    choices: [
-                        {
-                            text: "收下果实并感谢小狐狸",
-                            nextStage: "foxFruit",
-                            staminaCost: 0,
-                            gainItem: "发光果实"
-                        },
-                        {
+        // 1-6对应二次元名言列表
+        const quotes = [
+            "于次元裂缝中邂逅的光，终将照亮你我未完成的旅程✨",
+            "就算是随机掉落的命运，也要用热血书写专属剧情🌠",
+            "跨越次元的羁绊，从来都藏在不经意的温柔里🌸",
+            "在1到6的概率之外，是永不落幕的中二浪漫🌟",
+            "二次元的救赎，是哪怕随机抽中困境，也能笑着翻盘💪",
+            "命运的抽签结果，抵不过你眼里的星辰与热爱🌌"
+        ];
+
+        // 获取元素
+        const drawBtn = document.getElementById('drawBtn');
+        const resultBox = document.getElementById('resultBox');
+        const quoteBox = document.getElementById('quoteBox');
+
+        // 点击按钮随机生成1-6并显示对应名言
+        drawBtn.addEventListener('click', () => {
+            // 添加数字动画
+            resultBox.classList.add('animate');
+            // 名言框过渡效果
+            quoteBox.style.opacity = 0.5;
+
+            // 随机生成1-6的整数（数组索引从0开始，所以减1）
+            const randomNum = Math.floor(Math.random() * 6) + 1;
+            const randomQuote = quotes[randomNum - 1];
+
+            // 延迟显示结果（配合动画）
+            setTimeout(() => {
+                resultBox.textContent = randomNum;
+                quoteBox.textContent = randomQuote;
+                resultBox.classList.remove('animate');
+                quoteBox.style.opacity = 1;
+            }, 500);
+        });
+    </script>
+</body>
+</html>
