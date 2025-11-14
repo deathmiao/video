@@ -53,313 +53,22 @@
             margin: 0 auto 30px;
         }
         
-        .pet {
-            position: relative;
+        /* 动画/静态图容器（核心修改） */
+        #petContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        #petStatic, #feedAnimation {
             width: 250px;
             height: 300px;
-            margin: 0 auto;
-            transition: transform 0.3s ease;
-        }
-        
-        /* 美少女形象 */
-        .pet-body {
-            width: 180px;
-            height: 220px;
-            background: #ffd6e0;
-            border-radius: 50% 50% 45% 45%;
-            position: absolute;
-            top: 40px;
-            left: 35px;
-            box-shadow: 0 8px 0 #ffb7c5;
-        }
-        
-        .pet-hair {
-            width: 220px;
-            height: 180px;
-            background: #ff9eaf;
-            border-radius: 60% 60% 20% 20%;
-            position: absolute;
-            top: 0;
-            left: 15px;
-            z-index: -1;
-            box-shadow: 0 -3px 0 #ff7a93;
-        }
-        
-        .pet-hair-bang {
-            width: 160px;
-            height: 40px;
-            background: #ff9eaf;
+            object-fit: contain;
             border-radius: 20px;
-            position: absolute;
-            top: 60px;
-            left: 45px;
         }
-        
-        .pet-face {
-            position: absolute;
-            width: 140px;
-            height: 160px;
-            top: 80px;
-            left: 55px;
-        }
-        
-        .pet-eye {
-            width: 30px;
-            height: 30px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 40px;
-            border: 2px solid #ff7a93;
-            transition: all 0.3s ease;
-        }
-        
-        .pet-eye.left {
-            left: 15px;
-        }
-        
-        .pet-eye.right {
-            right: 15px;
-        }
-        
-        .pet-eye::after {
-            content: '';
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: #333;
-            border-radius: 50%;
-            top: 7px;
-            left: 7px;
-            transition: all 0.3s ease;
-        }
-        
-        .pet-eye::before {
-            content: '';
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-            top: 10px;
-            left: 10px;
-        }
-        
-        .pet-blush {
-            width: 25px;
-            height: 15px;
-            background: #ffc0cb;
-            border-radius: 50%;
-            position: absolute;
-            top: 80px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .pet-blush.left {
-            left: 5px;
-        }
-        
-        .pet-blush.right {
-            right: 5px;
-        }
-        
-        .pet-mouth {
-            width: 40px;
-            height: 20px;
-            background: #ff6b6b;
-            border-radius: 0 0 20px 20px;
-            position: absolute;
-            bottom: 30px;
-            left: 50px;
-            transition: all 0.3s ease;
-        }
-        
-        .happy .pet-mouth {
-            border-radius: 20px 20px 0 0;
-            height: 25px;
-            transform: scaleY(-1);
-        }
-        
-        .happy .pet-eye::after {
-            transform: scale(0.8);
-        }
-        
-        .blush .pet-blush {
-            opacity: 1;
-        }
-        
-        .pet-ear {
-            width: 35px;
-            height: 45px;
-            background: #ffd6e0;
-            border-radius: 50%;
-            position: absolute;
-            top: 90px;
-            z-index: -1;
-            border: 2px solid #ff9eaf;
-        }
-        
-        .pet-ear.left {
-            left: 20px;
-            transform: rotate(-30deg);
-        }
-        
-        .pet-ear.right {
-            right: 20px;
-            transform: rotate(30deg);
-        }
-        
-        .pet-hand {
-            width: 25px;
-            height: 40px;
-            background: #ffd6e0;
-            border-radius: 15px;
-            position: absolute;
-            top: 180px;
-            transition: transform 0.3s ease;
-        }
-        
-        .pet-hand.left {
-            left: 30px;
-            transform: rotate(-20deg);
-        }
-        
-        .pet-hand.right {
-            right: 30px;
-            transform: rotate(20deg);
-        }
-        
-        .pet-dress {
-            width: 200px;
-            height: 80px;
-            background: #9c27b0;
-            border-radius: 0 0 50px 50px;
-            position: absolute;
-            bottom: 0;
-            left: 25px;
-            box-shadow: 0 3px 0 #7b1fa2;
-        }
-        
-        .pet-dress-collar {
-            width: 60px;
-            height: 20px;
-            background: white;
-            border-radius: 10px;
-            position: absolute;
-            top: -10px;
-            left: 70px;
-        }
-        
-        /* 互动元素 */
-        .pet-interaction {
-            position: absolute;
-            opacity: 0;
-            transition: all 0.5s ease;
-            z-index: 1;
-        }
-        
-        .food {
-            width: 35px;
-            height: 35px;
-            background: #ffd700;
-            border-radius: 50%;
-            top: 150px;
-            left: 50px;
-            box-shadow: 0 3px 0 #ffc107;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #d4af37;
-            font-size: 18px;
-        }
-        
-        .ball {
-            width: 35px;
-            height: 35px;
-            background: #4ecdc4;
-            border-radius: 50%;
-            top: 150px;
-            right: 50px;
-            box-shadow: 0 3px 0 #3bb4ac;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-        }
-        
-        /* 爱心特效 */
-        .heart {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #ff6b6b;
-            transform: rotate(45deg);
-            opacity: 0;
-            animation: float 1.5s ease-out;
-        }
-        
-        .heart::before,
-        .heart::after {
-            content: '';
-            width: 20px;
-            height: 20px;
-            background: #ff6b6b;
-            border-radius: 50%;
-            position: absolute;
-        }
-        
-        .heart::before {
-            top: -10px;
-            left: 0;
-        }
-        
-        .heart::after {
-            top: 0;
-            left: -10px;
-        }
-        
-        @keyframes float {
-            0% {
-                opacity: 1;
-                transform: rotate(45deg) translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: rotate(45deg) translateY(-50px);
-            }
-        }
-        
-        /* 眨眼动画 */
-        @keyframes blink {
-            0%, 100% {
-                height: 30px;
-            }
-            50% {
-                height: 5px;
-            }
-        }
-        
-        .blink .pet-eye {
-            animation: blink 0.5s ease;
-        }
-        
-        /* 摇摆动画 */
-        @keyframes swing {
-            0%, 100% {
-                transform: rotate(0);
-            }
-            25% {
-                transform: rotate(-5deg);
-            }
-            75% {
-                transform: rotate(5deg);
-            }
-        }
-        
-        .swing {
-            animation: swing 1s ease-in-out;
+        #feedAnimation {
+            display: none;
         }
         
         .stats {
@@ -471,13 +180,244 @@
             transition: all 0.3s ease;
         }
         
-        .interaction-animation {
-            animation: bounce 0.5s ease;
+        .pet-status {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
         }
         
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .status-icon {
+            font-size: 1.5rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .pet-container {
+                width: 250px;
+                height: 300px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .action-btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>美少女虚拟宠物</h1>
+        <p class="subtitle">通过投喂和玩耍增加与美少女的好感度吧！</p>
+        
+        <!-- 宠物容器（已替换为动画+静态图） -->
+        <div class="pet-container" id="petContainer">
+            <!-- 静态图（替换为你的美少女图链接） -->
+            <img 
+                id="petStatic" 
+                src="<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美少女虚拟宠物</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f0e6ff 0%, #d8bfff 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(123, 31, 162, 0.15);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1 {
+            color: #9c27b0;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(156, 39, 176, 0.1);
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        
+        .pet-container {
+            position: relative;
+            width: 300px;
+            height: 350px;
+            margin: 0 auto 30px;
+        }
+        
+        /* 动画/静态图容器（核心修改） */
+        #petContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        #petStatic, #feedAnimation {
+            width: 250px;
+            height: 300px;
+            object-fit: contain;
+            border-radius: 20px;
+        }
+        #feedAnimation {
+            display: none;
+        }
+        
+        .stats {
+            background: #f8f5ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 5px rgba(156, 39, 176, 0.1);
+        }
+        
+        .affection-meter {
+            margin-bottom: 15px;
+        }
+        
+        .affection-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .progress-bar {
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #9c27b0, #e91e63);
+            width: 0%;
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .feed-btn {
+            background: linear-gradient(to right, #ff9eaf, #ff6b6b);
+        }
+        
+        .play-btn {
+            background: linear-gradient(to right, #4ecdc4, #26a69a);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f5ff;
+            border-radius: 10px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #555;
+            box-shadow: inset 0 2px 5px rgba(156, 39, 176, 0.1);
+            transition: all 0.3s ease;
         }
         
         .pet-status {
@@ -533,15 +473,262 @@
         <h1>美少女虚拟宠物</h1>
         <p class="subtitle">通过投喂和玩耍增加与美少女的好感度吧！</p>
         
+        <!-- 宠物容器（已替换为动画+静态图） -->
         <div class="pet-container" id="petContainer">
-            <div class="pet" id="pet">
-                <!-- 美少女头部 -->
-                <div class="pet-hair"></div>
-                <div class="pet-hair-bang"></div>
-                
-                <!-- 身体部分 -->
-                <div class="pet-body"></div>
-                <div class="pet-dress"></div>
-                <div class="pet-dress-collar"></div>
-                
-                <!-- 面部
+            <!-- 静态图（替换为你的美少女图链接） -->
+            <img 
+                id="petStatic" 
+                src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc_icon/gen_image/image_generation.png~tplv-noop.image?x-expires=2071216890&x-signature=ndYYq%2FIqQhrfrru7bVMkIVWMjBg%3D" 
+                alt="美少女静态图"
+            >
+            <!-- 投喂动画视频（替换为你的ComfyUI动画链接） -->
+            <video 
+                id="feedAnimation" 
+                autoplay 
+                muted 
+                loop 
+                playsinline
+            >
+                <source src="你的投喂动画.mp4" type="video/mp4">
+                浏览器不支持视频播放
+            </video>
+        </div>
+        
+        <div class="stats">
+            <div class="affection-meter">
+                <div class="affection-label">
+                    <span>好感度</span>
+                    <span id="affectionPercent">0.0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="affectionProgress">
+                        <div class="progress-text" id="progressText">0.0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pet-status">
+                <div class="status-item">
+                    <span class="status-icon">🍖</span>
+                    <span id="feedCount">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">🎾</span>
+                    <span id="playCount">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="action-btn feed-btn" id="feedBtn">
+                <span>🍖</span> 投喂
+            </button>
+            <button class="action-btn play-btn" id="playBtn">
+                <span>🎾</span> 玩耍
+            </button>
+        </div>
+        
+        <div class="message" id="message">
+            欢迎！点击按钮与你的美少女互动吧！
+        </div>
+    </div>
+
+    <script>
+        // 宠物状态数据
+        const petData = {
+            affection: 0, 
+            maxAffection: 100000, 
+            feedCount: 0, 
+            playCount: 0, 
+            increment: 0.1 
+        };
+        
+        // DOM元素
+        const petStatic = document.getElementById('petStatic');
+        const feedAnimation = document.getElementById('feedAnimation');
+        const affectionPercent = document.getElementById('affectionPercent');
+        const affectionProgress = document.getElementById('affectionProgress');
+        const progressText = document.getElementById('progressText');
+        const feedBtn = document.getElementById('feedBtn');
+        const playBtn = document.getElementById('playBtn');
+        const message = document.getElementById('message');
+        const feedCount = document.getElementById('feedCount');
+        const playCount = document.getElementById('playCount');
+        
+        // 更新UI显示
+        function updateUI() {
+            const percent = (petData.affection / petData.maxAffection * 100).toFixed(1);
+            affectionPercent.textContent = `${percent}%`;
+            progressText.textContent = `${percent}%`;
+            affectionProgress.style.width = `${percent}%`;
+            feedCount.textContent = petData.feedCount;
+            playCount.textContent = petData.playCount;
+            
+            if (petData.affection >= petData.maxAffection) {
+                message.textContent = "🎉 恭喜！你已与美少女达到最大好感度！";
+                feedBtn.disabled = true;
+                playBtn.disabled = true;
+            }
+        }
+        
+        // 投喂功能（已整合动画）
+        feedBtn.addEventListener('click', function() {
+            petData.affection += petData.increment;
+            petData.feedCount++;
+            
+            // 显示动画，隐藏静态图
+            petStatic.style.display = 'none';
+            feedAnimation.style.display = 'block';
+            feedAnimation.currentTime = 0; // 重置动画到开头
+            
+            message.textContent = "🍖 投喂成功！美少女超开心～";
+            updateUI();
+            
+            // 动画播放3秒后恢复静态图（可根据你的动画时长调整）
+            setTimeout(() => {
+                feedAnimation.style.display = 'none';
+                petStatic.style.display = 'block';
+            }, 3000);
+        });
+        
+        // 玩耍功能
+        playBtn.addEventListener('click', function() {
+            petData.affection += petData.increment;
+            petData.playCount++;
+            
+            message.textContent = "🎾 玩耍时间！美少女笑起来超可爱～";
+            updateUI();
+        });
+        
+        // 初始化
+        updateUI();
+    </script>
+</body>
+</html>
+" 
+                alt="美少女静态图"
+            >
+            <!-- 投喂动画视频（替换为你的ComfyUI动画链接） -->
+            <video 
+                id="feedAnimation" 
+                autoplay 
+                muted 
+                loop 
+                playsinline
+            >
+                <source src="你的投喂动画.mp4" type="video/mp4">
+                浏览器不支持视频播放
+            </video>
+        </div>
+        
+        <div class="stats">
+            <div class="affection-meter">
+                <div class="affection-label">
+                    <span>好感度</span>
+                    <span id="affectionPercent">0.0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="affectionProgress">
+                        <div class="progress-text" id="progressText">0.0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pet-status">
+                <div class="status-item">
+                    <span class="status-icon">🍖</span>
+                    <span id="feedCount">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">🎾</span>
+                    <span id="playCount">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="action-btn feed-btn" id="feedBtn">
+                <span>🍖</span> 投喂
+            </button>
+            <button class="action-btn play-btn" id="playBtn">
+                <span>🎾</span> 玩耍
+            </button>
+        </div>
+        
+        <div class="message" id="message">
+            欢迎！点击按钮与你的美少女互动吧！
+        </div>
+    </div>
+
+    <script>
+        // 宠物状态数据
+        const petData = {
+            affection: 0, 
+            maxAffection: 100000, 
+            feedCount: 0, 
+            playCount: 0, 
+            increment: 0.1 
+        };
+        
+        // DOM元素
+        const petStatic = document.getElementById('petStatic');
+        const feedAnimation = document.getElementById('feedAnimation');
+        const affectionPercent = document.getElementById('affectionPercent');
+        const affectionProgress = document.getElementById('affectionProgress');
+        const progressText = document.getElementById('progressText');
+        const feedBtn = document.getElementById('feedBtn');
+        const playBtn = document.getElementById('playBtn');
+        const message = document.getElementById('message');
+        const feedCount = document.getElementById('feedCount');
+        const playCount = document.getElementById('playCount');
+        
+        // 更新UI显示
+        function updateUI() {
+            const percent = (petData.affection / petData.maxAffection * 100).toFixed(1);
+            affectionPercent.textContent = `${percent}%`;
+            progressText.textContent = `${percent}%`;
+            affectionProgress.style.width = `${percent}%`;
+            feedCount.textContent = petData.feedCount;
+            playCount.textContent = petData.playCount;
+            
+            if (petData.affection >= petData.maxAffection) {
+                message.textContent = "🎉 恭喜！你已与美少女达到最大好感度！";
+                feedBtn.disabled = true;
+                playBtn.disabled = true;
+            }
+        }
+        
+        // 投喂功能（已整合动画）
+        feedBtn.addEventListener('click', function() {
+            petData.affection += petData.increment;
+            petData.feedCount++;
+            
+            // 显示动画，隐藏静态图
+            petStatic.style.display = 'none';
+            feedAnimation.style.display = 'block';
+            feedAnimation.currentTime = 0; // 重置动画到开头
+            
+            message.textContent = "🍖 投喂成功！美少女超开心～";
+            updateUI();
+            
+            // 动画播放3秒后恢复静态图（可根据你的动画时长调整）
+            setTimeout(() => {
+                feedAnimation.style.display = 'none';
+                petStatic.style.display = 'block';
+            }, 3000);
+        });
+        
+        // 玩耍功能
+        playBtn.addEventListener('click', function() {
+            petData.affection += petData.increment;
+            petData.playCount++;
+            
+            message.textContent = "🎾 玩耍时间！美少女笑起来超可爱～";
+            updateUI();
+        });
+        
+        // 初始化
+        updateUI();
+    </script>
+</body>
+</html>
