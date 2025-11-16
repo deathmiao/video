@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>动漫配套语录（图片+对应台词）</title>
+    <title>动漫语录（纯静态无特效）</title>
     <style>
         body {
             margin: 0;
@@ -26,6 +26,7 @@
             height: 100%;
             object-fit: cover;
             filter: brightness(1) saturate(1.1);
+            /* 完全删除遮罩相关所有样式 */
         }
         .quote-area {
             position: absolute;
@@ -40,27 +41,16 @@
         .quote-content-wrapper {
             background: rgba(0,0,0,0.3);
             backdrop-filter: blur(4px);
-            padding: 20px 25px;
-            border-radius: 12px;
+            padding: 12px 20px;
+            border-radius: 8px;
             margin: 0 auto 30px;
             max-width: 700px;
         }
         .quote-content {
             font-size: 24px;
             line-height: 2;
-            margin: 0 0 10px;
-            opacity: 1;
-        }
-        .quote-source {
-            color: rgba(255,255,255,0.9);
-            font-size: 16px;
-            font-style: italic;
             margin: 0;
-        }
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
+            opacity: 1; /* 静态显示，无淡入 */
         }
         .action-btn {
             background: rgba(0,0,0,0.3);
@@ -76,13 +66,14 @@
             background: rgba(0,0,0,0.4);
             border-color: white;
         }
+        .loading {
+            display: none; /* 无加载动画，隐藏 */
+        }
+        /* 手机端适配 */
         @media (max-width: 768px) {
             .quote-content {
                 font-size: 32px;
                 line-height: 2.2;
-            }
-            .quote-source {
-                font-size: 18px;
             }
             .action-btn {
                 font-size: 20px;
@@ -94,58 +85,42 @@
 <body>
     <div class="bg-container">
         <div class="bg-img-wrapper">
-            <img class="bg-img" id="bgImage" src="https://img.xjh.me/random_img.php?type=anime&return=302" alt="动漫背景">
+            <img class="bg-img" id="bgImage" src="https://img.xjh.me/random_img.php?type=anime&return=302" alt="随机动漫插画背景">
         </div>
+        <div class="loading" id="loading">加载中...</div>
         
         <div class="quote-area">
             <div class="quote-content-wrapper">
-                <div class="quote-content" id="animeQuote"></div>
-                <div class="quote-source" id="quoteSource"></div>
+                <div class="quote-content" id="hitokoto"></div>
             </div>
-            <div class="btn-group">
-                <button class="action-btn" onclick="refreshBoth()">刷新配套内容</button>
-            </div>
+            <button class="action-btn" onclick="refreshBoth()">刷新内容</button>
         </div>
     </div>
 
     <script>
-        const quoteElem = document.getElementById("animeQuote");
-        const sourceElem = document.getElementById("quoteSource");
+        const quoteElem = document.getElementById("hitokoto");
         const bgElem = document.getElementById("bgImage");
         
-        window.onload = () => getAnimeQuote();
+        window.onload = () => {
+            getQuote(); // 直接加载语录，无任何特效触发
+        };
 
-        // 获取动漫专属配套语录（含出处）
-        function getAnimeQuote() {
-            // 动漫语录API：返回台词+动漫名+角色名
-            fetch("https://api.muxiaoguo.cn/api/dongmanluyuju?api_key=807e88552a56372e")
-                .then(res => res.json())
-                .then(data => {
-                    if (data.code === 200) {
-                        quoteElem.textContent = data.data.content;
-                        // 显示出处：角色名 - 动漫名
-                        sourceElem.textContent = `${data.data.character} - 《${data.data.anime}》`;
-                    } else {
-                        quoteElem.textContent = "勇气不是没有恐惧，而是即使害怕也坚持下去。";
-                        sourceElem.textContent = "蒙奇·D·路飞 - 《海贼王》";
-                    }
-                })
-                .catch(() => {
-                    quoteElem.textContent = "真正重要的东西，用眼睛是看不见的。";
-                    sourceElem.textContent = "狐狸 - 《小王子》";
-                });
+        function getQuote() {
+            fetch("https://v1.hitokoto.cn/?c=a&encode=text")
+                .then(res => res.text())
+                .then(text => quoteElem.textContent = text)
+                .catch(() => quoteElem.textContent = "加载失败，点击刷新重试~");
         }
 
-        // 刷新动漫图片
         function refreshBackground() {
+            // 直接更换图片，无遮罩/动画重置
             const newBgUrl = "https://img.xjh.me/random_img.php?type=anime&return=302&t=" + Math.random();
             bgElem.src = newBgUrl;
         }
 
-        // 同时刷新图片和配套语录
         function refreshBoth() {
             refreshBackground();
-            getAnimeQuote();
+            getQuote();
         }
     </script>
 </body>
