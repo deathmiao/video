@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>动漫语录+白色羽化收缩</title>
+    <title>动漫语录+图片羽化收缩</title>
     <style>
         body {
             margin: 0;
@@ -16,25 +16,29 @@
             overflow: hidden;
             background: #000; /* 避免加载空白 */
         }
+        /* 图片容器：单独承载特效，不影响文字 */
+        .bg-img-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
         .bg-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             filter: brightness(0.65) saturate(1.1);
-            /* 白色羽化核心：径向渐变遮罩，初始全白（隐藏图片） */
-            -webkit-mask-image: radial-gradient(circle, transparent 0%, white 100%);
-            mask-image: radial-gradient(circle, transparent 0%, white 100%);
-            -webkit-mask-size: 200% 200%;
-            mask-size: 200% 200%;
+            /* 图片羽化特效核心：径向渐变遮罩（仅作用于图片） */
+            -webkit-mask-image: radial-gradient(circle, transparent 0%, rgba(0,0,0,1) 100%);
+            mask-image: radial-gradient(circle, transparent 0%, rgba(0,0,0,1) 100%);
+            -webkit-mask-size: 300% 300%;
+            mask-size: 300% 300%;
             -webkit-mask-position: center;
             mask-position: center;
-            transition: -webkit-mask-position 1.5s ease-out;
-            transition: mask-position 1.5s ease-out;
+            transition: -webkit-mask-size 1.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: mask-size 1.8s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        /* 收缩效果：遮罩中心透明区扩大，白色羽化向四周退去 */
+        /* 触发后：遮罩收缩，图片从中心显现（羽化边缘退去） */
         .bg-img.shrink {
-            -webkit-mask-position: center;
-            mask-position: center;
             -webkit-mask-size: 100% 100%;
             mask-size: 100% 100%;
         }
@@ -47,6 +51,7 @@
             color: #fff;
             padding: 0 20px;
             z-index: 10;
+            pointer-events: none; /* 避免遮挡图片特效 */
         }
         .quote-content {
             font-size: 24px;
@@ -54,13 +59,12 @@
             max-width: 750px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.7);
             margin: 0 auto 40px;
+            /* 文字仅简单淡入，不参与羽化 */
             opacity: 0;
-            transform: translateY(15px);
-            transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s; /* 延迟跟随图片 */
+            transition: opacity 1s ease 0.8s; /* 延迟，等图片特效启动后再显示 */
         }
         .quote-content.fade-in {
             opacity: 1;
-            transform: translateY(0);
         }
         .action-btn {
             background: rgba(255,255,255,0.25);
@@ -72,6 +76,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             backdrop-filter: blur(3px);
+            pointer-events: auto; /* 按钮可点击 */
         }
         .action-btn:hover {
             background: rgba(255,255,255,0.4);
@@ -107,7 +112,10 @@
 </head>
 <body>
     <div class="bg-container">
-        <img class="bg-img" id="bgImage" src="https://img.xjh.me/random_img.php?type=anime&return=302" alt="随机动漫插画背景">
+        <!-- 图片单独用容器包裹，特效仅作用于图片 -->
+        <div class="bg-img-wrapper">
+            <img class="bg-img" id="bgImage" src="https://img.xjh.me/random_img.php?type=anime&return=302" alt="随机动漫插画背景">
+        </div>
         <div class="loading" id="loading" style="display: none;">加载中...</div>
         
         <div class="quote-area">
@@ -121,8 +129,9 @@
         const bgElem = document.getElementById("bgImage");
         
         window.onload = () => {
+            // 图片加载完成后，触发羽化收缩特效
             bgElem.onload = () => {
-                setTimeout(() => bgElem.classList.add("shrink"), 100); // 触发收缩特效
+                setTimeout(() => bgElem.classList.add("shrink"), 200);
             };
             getQuote();
         };
@@ -135,11 +144,11 @@
                 .then(res => res.text())
                 .then(text => {
                     quoteElem.textContent = text;
-                    setTimeout(() => quoteElem.classList.add("fade-in"), 300);
+                    setTimeout(() => quoteElem.classList.add("fade-in"), 500);
                 })
                 .catch(() => {
                     quoteElem.textContent = "加载失败，点击刷新重试~";
-                    setTimeout(() => quoteElem.classList.add("fade-in"), 300);
+                    setTimeout(() => quoteElem.classList.add("fade-in"), 500);
                 });
         }
 
@@ -147,13 +156,14 @@
             const loadingElem = document.getElementById("loading");
             loadingElem.style.display = "block";
             
-            // 重置特效状态
+            // 重置图片特效状态
             bgElem.classList.remove("shrink");
-            bgElem.style.opacity = 1;
+            // 强制重绘，避免特效不触发
+            bgElem.offsetHeight;
             
             const newBgUrl = "https://img.xjh.me/random_img.php?type=anime&return=302&t=" + Math.random();
             bgElem.onload = () => {
-                setTimeout(() => bgElem.classList.add("shrink"), 200); // 重新触发收缩
+                setTimeout(() => bgElem.classList.add("shrink"), 300);
                 loadingElem.style.display = "none";
             };
             bgElem.src = newBgUrl;
@@ -161,7 +171,7 @@
 
         function refreshBoth() {
             refreshBackground();
-            setTimeout(getQuote, 500);
+            setTimeout(getQuote, 600);
         }
     </script>
 </body>
