@@ -2,86 +2,147 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>动画语录+背景图</title>
+    <title>动漫语录+随机插画背景</title>
     <style>
         body {
             margin: 0;
-            font-family: "微软雅黑", sans-serif;
+            font-family: "微软雅黑", "PingFang SC", sans-serif;
+            overflow: hidden; /* 隐藏页面滚动条 */
         }
-        /* 背景图容器：包裹图片和文字，实现叠加 */
+        /* 背景容器：实现文字叠加+全屏显示 */
         .bg-container {
-            position: relative; /* 关键：让文字绝对定位相对于容器 */
+            position: relative;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
         }
-        /* 背景图片：铺满屏幕且不拉伸 */
+        /* 随机动漫背景图：适配所有屏幕 */
         .bg-img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            filter: brightness(0.7); /* 降低图片亮度，让文字更清晰 */
+            object-fit: cover; /* 不拉伸图片 */
+            filter: brightness(0.65) saturate(1.1); /* 优化文字可读性 */
+            transition: opacity 0.8s ease; /* 背景切换淡入淡出 */
         }
-        /* 叠加的文字区域：居中显示 */
+        /* 文字叠加层：居中显示 */
         .quote-area {
-            position: absolute; /* 脱离文档流，浮在图片上 */
+            position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* 精准居中 */
+            transform: translate(-50%, -50%);
             text-align: center;
-            color: white; /* 文字白色，适配深色背景 */
+            color: #fff;
             padding: 0 20px;
+            z-index: 10; /* 确保文字在图片上方 */
         }
         .quote-title {
-            font-size: 28px;
-            margin-bottom: 30px;
-            text-shadow: 0 0 8px rgba(0,0,0,0.5); /* 文字阴影，增强可读性 */
+            font-size: 26px;
+            margin-bottom: 25px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+            letter-spacing: 1px;
         }
         .quote-content {
-            font-size: 24px;
-            line-height: 2;
-            max-width: 800px;
-            text-shadow: 0 0 6px rgba(0,0,0,0.6);
+            font-size: 22px;
+            line-height: 1.9;
+            max-width: 750px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+            margin: 0 auto 40px;
         }
-        .refresh-btn {
-            margin-top: 40px;
-            background: rgba(255,255,255,0.3);
+        /* 按钮样式：半透明悬浮效果 */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .action-btn {
+            background: rgba(255,255,255,0.25);
             color: white;
-            border: 2px solid white;
-            padding: 12px 30px;
+            border: 2px solid rgba(255,255,255,0.8);
+            padding: 11px 28px;
             border-radius: 30px;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(3px); /* 毛玻璃效果 */
         }
-        .refresh-btn:hover {
-            background: rgba(255,255,255,0.5);
+        .action-btn:hover {
+            background: rgba(255,255,255,0.4);
+            border-color: white;
+            transform: translateY(-2px);
+        }
+        /* 加载提示样式 */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            text-shadow: 0 0 8px rgba(0,0,0,0.5);
+            z-index: 5;
         }
     </style>
 </head>
 <body>
     <div class="bg-container">
-        <!-- 背景图片：替换src为你的图片地址（网络图/本地图都可以） -->
-        <img class="bg-img" src="https://picsum.photos/id/1005/1920/1080" alt="背景图">
+        <!-- 第三个动漫背景API：偏插画风，自动随机 -->
+        <img class="bg-img" id="bgImage" src="https://img.xjh.me/random_img.php?type=anime&return=302" alt="随机动漫插画背景">
+        <div class="loading" id="loading" style="display: none;">加载中...</div>
         
-        <!-- 叠加的文字和按钮 -->
+        <!-- 叠加文字区域 -->
         <div class="quote-area">
             <div class="quote-title">动画里的治愈句子：</div>
             <div class="quote-content" id="hitokoto"></div>
-            <button class="refresh-btn" onclick="getQuote()">刷新语录</button>
+            <div class="btn-group">
+                <button class="action-btn" onclick="refreshQuote()">仅刷新语录</button>
+                <button class="action-btn" onclick="refreshBackground()">仅刷新背景</button>
+                <button class="action-btn" onclick="refreshBoth()">同时刷新</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // 页面加载自动获取语录
-        window.onload = getQuote;
-        // 调用一言API
+        // 页面加载时初始化
+        window.onload = () => {
+            getQuote(); // 获取初始语录
+        };
+
+        // 调用一言API获取动画语录
         function getQuote() {
-            const url = "https://v1.hitokoto.cn/?c=a&encode=text";
-            fetch(url)
+            const quoteElem = document.getElementById("hitokoto");
+            quoteElem.textContent = "正在加载语录...";
+            fetch("https://v1.hitokoto.cn/?c=a&encode=text")
                 .then(res => res.text())
-                .then(text => document.getElementById("hitokoto").textContent = text)
-                .catch(() => document.getElementById("hitokoto").textContent = "获取失败，点击刷新重试~");
+                .then(text => quoteElem.textContent = text)
+                .catch(() => quoteElem.textContent = "语录加载失败，点击重试~");
+        }
+
+        // 刷新语录（不换背景）
+        function refreshQuote() {
+            getQuote();
+        }
+
+        // 刷新背景（不换语录）
+        function refreshBackground() {
+            const bgElem = document.getElementById("bgImage");
+            const loadingElem = document.getElementById("loading");
+            
+            loadingElem.style.display = "block"; // 显示加载提示
+            bgElem.style.opacity = 0.3; // 背景淡暗
+            
+            // 加随机参数避免缓存，确保每次都是新图
+            const newBgUrl = "https://img.xjh.me/random_img.php?type=anime&return=302&t=" + Math.random();
+            bgElem.onload = () => {
+                bgElem.style.opacity = 1; // 新图加载完成淡入
+                loadingElem.style.display = "none"; // 隐藏加载提示
+            };
+            bgElem.src = newBgUrl;
+        }
+
+        // 同时刷新背景和语录
+        function refreshBoth() {
+            refreshBackground();
+            setTimeout(getQuote, 500); // 延迟加载语录，同步体验
         }
     </script>
 </body>
