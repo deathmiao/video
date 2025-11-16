@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>动漫语录+径向淡入背景</title>
+    <title>动漫语录+白色羽化收缩</title>
     <style>
         body {
             margin: 0;
@@ -14,19 +14,29 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
+            background: #000; /* 避免加载空白 */
         }
         .bg-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             filter: brightness(0.65) saturate(1.1);
-            /* 径向擦除特效核心：初始clip-path是圆形（半径0），动画后半径100% */
-            clip-path: circle(0% at center);
-            transition: clip-path 1.2s ease-out;
+            /* 白色羽化核心：径向渐变遮罩，初始全白（隐藏图片） */
+            -webkit-mask-image: radial-gradient(circle, transparent 0%, white 100%);
+            mask-image: radial-gradient(circle, transparent 0%, white 100%);
+            -webkit-mask-size: 200% 200%;
+            mask-size: 200% 200%;
+            -webkit-mask-position: center;
+            mask-position: center;
+            transition: -webkit-mask-position 1.5s ease-out;
+            transition: mask-position 1.5s ease-out;
         }
-        /* 背景图加载完成后添加该类，触发径向展开 */
-        .bg-img.expand {
-            clip-path: circle(150% at center);
+        /* 收缩效果：遮罩中心透明区扩大，白色羽化向四周退去 */
+        .bg-img.shrink {
+            -webkit-mask-position: center;
+            mask-position: center;
+            -webkit-mask-size: 100% 100%;
+            mask-size: 100% 100%;
         }
         .quote-area {
             position: absolute;
@@ -46,7 +56,7 @@
             margin: 0 auto 40px;
             opacity: 0;
             transform: translateY(15px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s; /* 延迟跟随图片 */
         }
         .quote-content.fade-in {
             opacity: 1;
@@ -78,7 +88,7 @@
             text-shadow: 0 0 8px rgba(0,0,0,0.5);
             z-index: 5;
         }
-        /* 手机端放大文字 */
+        /* 手机端适配 */
         @media (max-width: 768px) {
             .quote-content {
                 font-size: 32px;
@@ -111,9 +121,8 @@
         const bgElem = document.getElementById("bgImage");
         
         window.onload = () => {
-            // 初始加载时触发背景展开
             bgElem.onload = () => {
-                bgElem.classList.add("expand");
+                setTimeout(() => bgElem.classList.add("shrink"), 100); // 触发收缩特效
             };
             getQuote();
         };
@@ -126,26 +135,25 @@
                 .then(res => res.text())
                 .then(text => {
                     quoteElem.textContent = text;
-                    setTimeout(() => quoteElem.classList.add("fade-in"), 10);
+                    setTimeout(() => quoteElem.classList.add("fade-in"), 300);
                 })
                 .catch(() => {
                     quoteElem.textContent = "加载失败，点击刷新重试~";
-                    setTimeout(() => quoteElem.classList.add("fade-in"), 10);
+                    setTimeout(() => quoteElem.classList.add("fade-in"), 300);
                 });
         }
 
         function refreshBackground() {
             const loadingElem = document.getElementById("loading");
-            
             loadingElem.style.display = "block";
-            // 重置背景特效状态
-            bgElem.classList.remove("expand");
+            
+            // 重置特效状态
+            bgElem.classList.remove("shrink");
             bgElem.style.opacity = 1;
             
             const newBgUrl = "https://img.xjh.me/random_img.php?type=anime&return=302&t=" + Math.random();
             bgElem.onload = () => {
-                // 新图加载后触发径向展开
-                setTimeout(() => bgElem.classList.add("expand"), 50);
+                setTimeout(() => bgElem.classList.add("shrink"), 200); // 重新触发收缩
                 loadingElem.style.display = "none";
             };
             bgElem.src = newBgUrl;
