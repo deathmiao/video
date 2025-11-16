@@ -38,6 +38,15 @@
             max-width: 750px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.7);
             margin: 0 auto 40px;
+            /* 淡入动画核心样式 */
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        /* 加载完成后添加该类触发动画 */
+        .quote-content.fade-in {
+            opacity: 1;
+            transform: translateY(0);
         }
         .action-btn {
             background: rgba(255,255,255,0.25);
@@ -79,17 +88,28 @@
     </div>
 
     <script>
+        const quoteElem = document.getElementById("hitokoto");
+        
         window.onload = () => {
             getQuote();
         };
 
         function getQuote() {
-            const quoteElem = document.getElementById("hitokoto");
+            // 重置动画状态
+            quoteElem.classList.remove("fade-in");
             quoteElem.textContent = "正在加载语录...";
+            
             fetch("https://v1.hitokoto.cn/?c=a&encode=text")
                 .then(res => res.text())
-                .then(text => quoteElem.textContent = text)
-                .catch(() => quoteElem.textContent = "加载失败，点击刷新重试~");
+                .then(text => {
+                    quoteElem.textContent = text;
+                    // 内容更新后触发淡入动画（需延迟10ms确保DOM更新）
+                    setTimeout(() => quoteElem.classList.add("fade-in"), 10);
+                })
+                .catch(() => {
+                    quoteElem.textContent = "加载失败，点击刷新重试~";
+                    setTimeout(() => quoteElem.classList.add("fade-in"), 10);
+                });
         }
 
         function refreshBackground() {
