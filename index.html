@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>动漫语录（无特效+遮罩后消失）</title>
+    <title>动漫语录（纯静态无特效）</title>
     <style>
         body {
             margin: 0;
@@ -26,27 +26,7 @@
             height: 100%;
             object-fit: cover;
             filter: brightness(1) saturate(1.1);
-            /* 径向遮罩初始状态（隐藏图片） */
-            -webkit-mask-image: radial-gradient(circle, transparent 0%, rgba(0,0,0,1) 100%);
-            mask-image: radial-gradient(circle, transparent 0%, rgba(0,0,0,1) 100%);
-            -webkit-mask-size: 0% 0%;
-            mask-size: 0% 0%;
-            -webkit-mask-position: center;
-            mask-position: center;
-            /* 遮罩展开动画（2秒）+ 遮罩消失延迟 */
-            transition: 
-                -webkit-mask-size 2s ease-out,
-                mask-size 2s ease-out,
-                -webkit-mask-image 0.1s ease 2s,
-                mask-image 0.1s ease 2s;
-        }
-        /* 触发遮罩展开+最终消失 */
-        .bg-img.show {
-            -webkit-mask-size: 200% 200%;
-            mask-size: 200% 200%;
-            /* 特效结束后，遮罩彻底消失 */
-            -webkit-mask-image: none;
-            mask-image: none;
+            /* 完全删除遮罩相关所有样式 */
         }
         .quote-area {
             position: absolute;
@@ -58,7 +38,6 @@
             padding: 0 20px;
             z-index: 10;
         }
-        /* 半透明背景条（仅衬托文字） */
         .quote-content-wrapper {
             background: rgba(0,0,0,0.3);
             backdrop-filter: blur(4px);
@@ -71,8 +50,7 @@
             font-size: 24px;
             line-height: 2;
             margin: 0;
-            /* 无文字特效，直接显示 */
-            opacity: 1;
+            opacity: 1; /* 静态显示，无淡入 */
         }
         .action-btn {
             background: rgba(0,0,0,0.3);
@@ -89,7 +67,7 @@
             border-color: white;
         }
         .loading {
-            display: none; /* 无特效，隐藏加载提示 */
+            display: none; /* 无加载动画，隐藏 */
         }
         /* 手机端适配 */
         @media (max-width: 768px) {
@@ -124,9 +102,7 @@
         const bgElem = document.getElementById("bgImage");
         
         window.onload = () => {
-            // 触发遮罩展开特效
-            bgElem.classList.add('show');
-            getQuote();
+            getQuote(); // 直接加载语录，无任何特效触发
         };
 
         function getQuote() {
@@ -137,12 +113,8 @@
         }
 
         function refreshBackground() {
-            // 重置遮罩状态
-            bgElem.classList.remove('show');
-            bgElem.offsetHeight; // 强制重绘
-            
+            // 直接更换图片，无遮罩/动画重置
             const newBgUrl = "https://img.xjh.me/random_img.php?type=anime&return=302&t=" + Math.random();
-            bgElem.onload = () => bgElem.classList.add('show');
             bgElem.src = newBgUrl;
         }
 
