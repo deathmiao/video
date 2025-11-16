@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>图文叠加卡片</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 关键：适配手机屏幕 -->
+    <title>自适应图文卡片</title>
     <style>
         * {
             margin: 0;
@@ -16,13 +17,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px; /* 手机端留边距 */
         }
-        /* 卡片容器 */
+        /* 卡片容器：自适应宽高 */
         .card-container {
             width: 100%;
-            max-width: 600px;
-            height: 400px;
+            max-width: 700px; /* PC端最大宽度 */
+            max-height: 90vh; /* 手机端不超出屏幕 */
+            aspect-ratio: 16/9; /* 固定宽高比（适配不同屏幕） */
             cursor: pointer;
             transition: transform 0.3s ease;
             position: relative;
@@ -30,10 +32,22 @@
             overflow: hidden;
             box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
-        .card-container:hover {
-            transform: scale(1.03);
+        /* 手机端点击反馈 */
+        @media (max-width: 768px) {
+            .card-container {
+                touch-action: manipulation; /* 避免手机误触 */
+            }
+            .card-container:active {
+                transform: scale(0.98); /* 手机端点击缩小反馈 */
+            }
         }
-        /* 背景图片（占满容器） */
+        /* PC端hover效果 */
+        @media (min-width: 769px) {
+            .card-container:hover {
+                transform: scale(1.03);
+            }
+        }
+        /* 背景图片：自适应填充 */
         .card-bg {
             width: 100%;
             height: 100%;
@@ -43,49 +57,50 @@
             left: 0;
             z-index: 0;
         }
-        /* 文字叠加层（半透明背景） */
+        /* 文字叠加层：自适应排版 */
         .card-content {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 30px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7)); /* 渐变遮罩 */
+            padding: clamp(15px, 4vw, 30px); /* 自适应内边距（手机小/PC大） */
+            background: linear-gradient(transparent, rgba(0,0,0,0.75));
             color: #fff;
             z-index: 1;
         }
         .card-title {
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-size: clamp(18px, 5vw, 24px); /* 自适应字体大小 */
+            margin-bottom: clamp(8px, 2vw, 10px);
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         .card-text {
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px); /* 自适应字体大小 */
             line-height: 1.7;
             text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* 手机端最多显示3行文字（避免溢出） */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-        /* 刷新提示 */
+        /* 刷新提示：自适应位置 */
         .refresh-tip {
             position: absolute;
-            top: 20px;
+            top: clamp(10px, 3vw, 20px);
             left: 50%;
             transform: translateX(-50%);
             color: #fff;
             background: rgba(0,0,0,0.5);
-            padding: 6px 12px;
+            padding: clamp(4px, 1.5vw, 6px) clamp(8px, 2vw, 12px);
             border-radius: 20px;
-            font-size: 14px;
+            font-size: clamp(12px, 2vw, 14px);
             z-index: 1;
         }
     </style>
 </head>
 <body>
     <div class="card-container" onclick="refreshCard()">
-        <!-- 背景图片 -->
         <img class="card-bg" id="cardImg" src="" alt="背景图">
-        <!-- 刷新提示 -->
         <div class="refresh-tip">点击卡片刷新内容</div>
-        <!-- 叠加文字 -->
         <div class="card-content">
             <h3 class="card-title" id="cardTitle"></h3>
             <p class="card-text" id="cardText"></p>
@@ -93,7 +108,6 @@
     </div>
 
     <script>
-        // 图文数据列表（可自行添加更多）
         const cardDataList = [
             {
                 title: "春日的公园",
@@ -117,10 +131,8 @@
             }
         ];
 
-        // 初始化卡片
         window.onload = refreshCard;
 
-        // 刷新卡片内容
         function refreshCard() {
             const randomIdx = Math.floor(Math.random() * cardDataList.length);
             const data = cardDataList[randomIdx];
