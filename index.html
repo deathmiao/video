@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>动漫语录+随机插画背景</title>
+    <title>动漫语录+径向淡入背景</title>
     <style>
         body {
             margin: 0;
@@ -20,7 +20,13 @@
             height: 100%;
             object-fit: cover;
             filter: brightness(0.65) saturate(1.1);
-            transition: opacity 0.8s ease;
+            /* 径向擦除特效核心：初始clip-path是圆形（半径0），动画后半径100% */
+            clip-path: circle(0% at center);
+            transition: clip-path 1.2s ease-out;
+        }
+        /* 背景图加载完成后添加该类，触发径向展开 */
+        .bg-img.expand {
+            clip-path: circle(150% at center);
         }
         .quote-area {
             position: absolute;
@@ -33,24 +39,20 @@
             z-index: 10;
         }
         .quote-content {
-            /* 电脑端默认样式 */
             font-size: 24px;
             line-height: 2;
             max-width: 750px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.7);
             margin: 0 auto 40px;
-            /* 淡入动画核心样式 */
             opacity: 0;
             transform: translateY(15px);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
-        /* 加载完成后添加该类触发动画 */
         .quote-content.fade-in {
             opacity: 1;
             transform: translateY(0);
         }
         .action-btn {
-            /* 电脑端默认样式 */
             background: rgba(255,255,255,0.25);
             color: white;
             border: 2px solid rgba(255,255,255,0.8);
@@ -76,20 +78,19 @@
             text-shadow: 0 0 8px rgba(0,0,0,0.5);
             z-index: 5;
         }
-
-        /* 媒体查询：针对手机屏幕（宽度≤768px）放大文字 */
-        @media (max-width: 1080px) {
+        /* 手机端放大文字 */
+        @media (max-width: 768px) {
             .quote-content {
-                font-size: 32px; /* 手机端文字放大 */
+                font-size: 32px;
                 line-height: 2.2;
-                max-width: 90%; /* 适配手机宽度 */
+                max-width: 90%;
             }
             .action-btn {
-                font-size: 20px; /* 手机端按钮文字放大 */
+                font-size: 20px;
                 padding: 14px 36px;
             }
             .loading {
-                font-size: 22px; /* 手机端加载提示放大 */
+                font-size: 22px;
             }
         }
     </style>
@@ -107,13 +108,17 @@
 
     <script>
         const quoteElem = document.getElementById("hitokoto");
+        const bgElem = document.getElementById("bgImage");
         
         window.onload = () => {
+            // 初始加载时触发背景展开
+            bgElem.onload = () => {
+                bgElem.classList.add("expand");
+            };
             getQuote();
         };
 
         function getQuote() {
-            // 重置动画状态
             quoteElem.classList.remove("fade-in");
             quoteElem.textContent = "正在加载语录...";
             
@@ -121,7 +126,6 @@
                 .then(res => res.text())
                 .then(text => {
                     quoteElem.textContent = text;
-                    // 内容更新后触发淡入动画（需延迟10ms确保DOM更新）
                     setTimeout(() => quoteElem.classList.add("fade-in"), 10);
                 })
                 .catch(() => {
@@ -131,15 +135,17 @@
         }
 
         function refreshBackground() {
-            const bgElem = document.getElementById("bgImage");
             const loadingElem = document.getElementById("loading");
             
             loadingElem.style.display = "block";
-            bgElem.style.opacity = 0.3;
+            // 重置背景特效状态
+            bgElem.classList.remove("expand");
+            bgElem.style.opacity = 1;
             
             const newBgUrl = "https://img.xjh.me/random_img.php?type=anime&return=302&t=" + Math.random();
             bgElem.onload = () => {
-                bgElem.style.opacity = 1;
+                // 新图加载后触发径向展开
+                setTimeout(() => bgElem.classList.add("expand"), 50);
                 loadingElem.style.display = "none";
             };
             bgElem.src = newBgUrl;
