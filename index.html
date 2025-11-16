@@ -26,7 +26,6 @@
             height: 100%;
             object-fit: cover;
             filter: brightness(1) saturate(1.1);
-            /* 完全删除遮罩相关所有样式 */
         }
         .quote-area {
             position: absolute;
@@ -35,39 +34,43 @@
             transform: translate(-50%, -50%);
             text-align: center;
             color: #fff;
+            text-shadow: 0 0 6px rgba(0,0,0,0.4);
             padding: 0 20px;
             z-index: 10;
         }
         .quote-content-wrapper {
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(4px);
-            padding: 12px 20px;
-            border-radius: 8px;
+            /* 纯毛玻璃：无黑色滤镜，仅半透明白色+模糊 */
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            padding: 18px 28px;
+            border-radius: 12px;
             margin: 0 auto 30px;
             max-width: 700px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         .quote-content {
             font-size: 24px;
             line-height: 2;
             margin: 0;
-            opacity: 1; /* 静态显示，无淡入 */
+            opacity: 1;
         }
         .action-btn {
-            background: rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.15);
             color: white;
-            border: 1px solid rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.3);
             padding: 10px 28px;
             border-radius: 30px;
             font-size: 16px;
             cursor: pointer;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(8px);
+            text-shadow: 0 0 4px rgba(0,0,0,0.3);
         }
         .action-btn:hover {
-            background: rgba(0,0,0,0.4);
+            background: rgba(255,255,255,0.25);
             border-color: white;
         }
         .loading {
-            display: none; /* 无加载动画，隐藏 */
+            display: none;
         }
         /* 手机端适配 */
         @media (max-width: 768px) {
@@ -102,7 +105,7 @@
         const bgElem = document.getElementById("bgImage");
         
         window.onload = () => {
-            getQuote(); // 直接加载语录，无任何特效触发
+            getQuote();
         };
 
         function getQuote() {
@@ -113,7 +116,6 @@
         }
 
         function refreshBackground() {
-            // 直接更换图片，无遮罩/动画重置
             const newBgUrl = "https://img.xjh.me/random_img.php?type=anime&return=302&t=" + Math.random();
             bgElem.src = newBgUrl;
         }
