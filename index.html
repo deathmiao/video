@@ -2,90 +2,68 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>自定义页面</title>
+    <title>自定义页面（含网易云歌单）</title>
     <style>
-        body {
+        * {
             margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            background-size: cover; /* 背景图自适应 */
-            background-position: center;
-            color: white;
-            font-family: 微软雅黑;
+            padding: 0;
             box-sizing: border-box;
         }
-
-        /* 图片上传区域 */
-        .img-upload {
-            margin-bottom: 30px;
+        body {
+            min-height: 100vh;
+            background: #f0f2f5;
+            color: #333;
+            font-family: 微软雅黑;
             padding: 20px;
-            background: rgba(0,0,0,0.7);
-            border-radius: 8px;
-            width: 300px;
         }
-
-        /* 音乐播放器（放在右侧） */
-        .music-player {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.5);
-            padding: 15px;
-            border-radius: 8px;
-            width: 280px;
+        .main-layout {
+            display: grid;
+            grid-template-columns: 70% 28%;
+            gap: 2%;
         }
-
-        /* 随机文章（放在下方） */
-        .article {
-            margin-top: 20px;
-            background: rgba(0,0,0,0.7);
+        .article-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            line-height: 1.8;
+        }
+        .music-card {
+            background: #fff;
             padding: 20px;
             border-radius: 8px;
-            max-width: 600px;
-            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: fit-content;
         }
     </style>
 </head>
 <body>
-    <!-- 自定义背景图上传 -->
-    <div class="img-upload">
-        <h4>设置背景图</h4>
-        <input type="file" id="bgUpload" accept="image/*">
-        <p>选择图片后自动设为背景</p>
-    </div>
-
-    <!-- 音乐播放器（右侧不重叠） -->
-    <div class="music-player">
-        <h4>我的歌单</h4>
-        <audio controls style="width: 100%;">
-            <source src="你的音乐文件.mp3" type="audio/mpeg">
-            浏览器不支持音频播放
-        </audio>
-    </div>
-
-    <!-- 随机文章（下方区域） -->
-    <div class="article">
-        <h3>随机文章</h3>
-        <p id="articleContent">加载中...</p>
+    <div class="main-layout">
+        <!-- 左：随机文章区域 -->
+        <div class="article-card">
+            <h2>随机文章</h2>
+            <hr style="margin: 15px 0; border-color: #eee;">
+            <p id="articleContent">加载中...</p>
+        </div>
+        <!-- 右：网易云歌单区域 -->
+        <div class="music-card">
+            <h3>我的网易云歌单</h3>
+            <hr style="margin: 15px 0; border-color: #eee;">
+            <!-- 网易云歌单iframe嵌入代码 -->
+            <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="100%" height="380"
+                src="https://music.163.com/outchain/player?type=0&id=2942403976&auto=0&height=360">
+            </iframe>
+        </div>
     </div>
 
     <script>
-        // 1. 背景图上传功能
-        document.getElementById("bgUpload").addEventListener("change", function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                document.body.style.backgroundImage = `url(${url})`;
-            }
-        });
-
-        // 2. 随机文章功能
-        const articles = [
-            "文章1：这是第一篇测试内容~",
-            "文章2：这是第二篇不同的内容~",
-            "文章3：这是第三篇新内容~"
-        ];
+        // 随机文章功能
         window.onload = () => {
+            const articles = [
+                "文章1：这是一篇测试内容，你可以在这里替换成自己的文字~ 这里可以添加更多段落内容，比如日常随笔、阅读感悟或者任何你想展示的文本信息。",
+                "文章2：这是第二篇不同的内容，长度可以自由调整哦~ 网页会自动适配文本长度，无需额外调整样式，非常便捷。",
+                "文章3：这是第三篇内容，支持换行、分段等格式~ 你也可以在文本中添加标点符号、特殊字符，丰富内容呈现效果。"
+            ];
             const randomIdx = Math.floor(Math.random() * articles.length);
             document.getElementById("articleContent").innerText = articles[randomIdx];
         };
