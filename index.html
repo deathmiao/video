@@ -33,6 +33,7 @@
             z-index: 10;
         }
         .quote-content {
+            /* 电脑端默认样式 */
             font-size: 24px;
             line-height: 2;
             max-width: 750px;
@@ -49,6 +50,7 @@
             transform: translateY(0);
         }
         .action-btn {
+            /* 电脑端默认样式 */
             background: rgba(255,255,255,0.25);
             color: white;
             border: 2px solid rgba(255,255,255,0.8);
@@ -73,6 +75,22 @@
             font-size: 18px;
             text-shadow: 0 0 8px rgba(0,0,0,0.5);
             z-index: 5;
+        }
+
+        /* 媒体查询：针对手机屏幕（宽度≤768px）放大文字 */
+        @media (max-width: 768px) {
+            .quote-content {
+                font-size: 32px; /* 手机端文字放大 */
+                line-height: 2.2;
+                max-width: 90%; /* 适配手机宽度 */
+            }
+            .action-btn {
+                font-size: 20px; /* 手机端按钮文字放大 */
+                padding: 14px 36px;
+            }
+            .loading {
+                font-size: 22px; /* 手机端加载提示放大 */
+            }
         }
     </style>
 </head>
