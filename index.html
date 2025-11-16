@@ -1,139 +1,94 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>二次元抽签1-6（含名言）</title>
+    <title>自定义页面</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Comic Sans MS", "微软雅黑", sans-serif;
-        }
         body {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            margin: 0;
+            padding: 20px;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(255, 100, 150, 0.3);
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-        }
-        h1 {
-            color: #e63946;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .number-box {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(45deg, #457b9d, #1d3557);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px auto;
-            box-shadow: 0 0 20px rgba(69, 123, 157, 0.5);
+            background-size: cover; /* 背景图自适应 */
+            background-position: center;
             color: white;
-            font-size: 80px;
-            font-weight: bold;
-            transition: all 0.5s ease;
+            font-family: 微软雅黑;
+            box-sizing: border-box;
         }
-        .number-box.animate {
-            transform: scale(1.2) rotate(10deg);
-            box-shadow: 0 0 30px rgba(230, 57, 70, 0.7);
-        }
-        .quote-box {
-            background: rgba(250, 208, 196, 0.3);
+
+        /* 图片上传区域 */
+        .img-upload {
+            margin-bottom: 30px;
             padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1d3557;
-            font-size: 18px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 8px;
+            width: 300px;
+        }
+
+        /* 音乐播放器（放在右侧） */
+        .music-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 8px;
+            width: 280px;
+        }
+
+        /* 随机文章（放在下方） */
+        .article {
+            margin-top: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
             line-height: 1.6;
-            transition: all 0.3s ease;
-        }
-        #drawBtn {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-        }
-        #drawBtn:hover {
-            background: #ff4949;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 73, 73, 0.6);
-        }
-        .tip {
-            color: #666;
-            margin-top: 15px;
-            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>✨ 二次元抽签机 ✨</h1>
-        <div class="number-box" id="resultBox">?</div>
-        <div class="quote-box" id="quoteBox">点击按钮，解锁你的专属数字与名言～</div>
-        <button id="drawBtn">点击抽取1-6数字</button>
-        <p class="tip">命运的齿轮已经转动，每一次抽签都是独一无二的邂逅～</p>
+    <!-- 自定义背景图上传 -->
+    <div class="img-upload">
+        <h4>设置背景图</h4>
+        <input type="file" id="bgUpload" accept="image/*">
+        <p>选择图片后自动设为背景</p>
+    </div>
+
+    <!-- 音乐播放器（右侧不重叠） -->
+    <div class="music-player">
+        <h4>我的歌单</h4>
+        <audio controls style="width: 100%;">
+            <source src="你的音乐文件.mp3" type="audio/mpeg">
+            浏览器不支持音频播放
+        </audio>
+    </div>
+
+    <!-- 随机文章（下方区域） -->
+    <div class="article">
+        <h3>随机文章</h3>
+        <p id="articleContent">加载中...</p>
     </div>
 
     <script>
-        // 1-6对应二次元名言列表
-        const quotes = [
-            "于次元裂缝中邂逅的光，终将照亮你我未完成的旅程✨",
-            "就算是随机掉落的命运，也要用热血书写专属剧情🌠",
-            "跨越次元的羁绊，从来都藏在不经意的温柔里🌸",
-            "在1到6的概率之外，是永不落幕的中二浪漫🌟",
-            "二次元的救赎，是哪怕随机抽中困境，也能笑着翻盘💪",
-            "命运的抽签结果，抵不过你眼里的星辰与热爱🌌"
-        ];
-
-        // 获取元素
-        const drawBtn = document.getElementById('drawBtn');
-        const resultBox = document.getElementById('resultBox');
-        const quoteBox = document.getElementById('quoteBox');
-
-        // 点击按钮随机生成1-6并显示对应名言
-        drawBtn.addEventListener('click', () => {
-            // 添加数字动画
-            resultBox.classList.add('animate');
-            // 名言框过渡效果
-            quoteBox.style.opacity = 0.5;
-
-            // 随机生成1-6的整数（数组索引从0开始，所以减1）
-            const randomNum = Math.floor(Math.random() * 6) + 1;
-            const randomQuote = quotes[randomNum - 1];
-
-            // 延迟显示结果（配合动画）
-            setTimeout(() => {
-                resultBox.textContent = randomNum;
-                quoteBox.textContent = randomQuote;
-                resultBox.classList.remove('animate');
-                quoteBox.style.opacity = 1;
-            }, 500);
+        // 1. 背景图上传功能
+        document.getElementById("bgUpload").addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.body.style.backgroundImage = `url(${url})`;
+            }
         });
+
+        // 2. 随机文章功能
+        const articles = [
+            "文章1：这是第一篇测试内容~",
+            "文章2：这是第二篇不同的内容~",
+            "文章3：这是第三篇新内容~"
+        ];
+        window.onload = () => {
+            const randomIdx = Math.floor(Math.random() * articles.length);
+            document.getElementById("articleContent").innerText = articles[randomIdx];
+        };
     </script>
 </body>
 </html>
