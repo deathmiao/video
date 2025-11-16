@@ -1,145 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 关键：适配手机屏幕 -->
-    <title>自适应图文卡片</title>
+    <title>动画语录+背景图</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
-            min-height: 100vh;
-            background: #f5f7fa;
-            font-family: 微软雅黑;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px; /* 手机端留边距 */
+            margin: 0;
+            font-family: "微软雅黑", sans-serif;
         }
-        /* 卡片容器：自适应宽高 */
-        .card-container {
-            width: 100%;
-            max-width: 700px; /* PC端最大宽度 */
-            max-height: 90vh; /* 手机端不超出屏幕 */
-            aspect-ratio: 16/9; /* 固定宽高比（适配不同屏幕） */
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            position: relative;
-            border-radius: 12px;
+        /* 背景图容器：包裹图片和文字，实现叠加 */
+        .bg-container {
+            position: relative; /* 关键：让文字绝对定位相对于容器 */
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
-        /* 手机端点击反馈 */
-        @media (max-width: 768px) {
-            .card-container {
-                touch-action: manipulation; /* 避免手机误触 */
-            }
-            .card-container:active {
-                transform: scale(0.98); /* 手机端点击缩小反馈 */
-            }
-        }
-        /* PC端hover效果 */
-        @media (min-width: 769px) {
-            .card-container:hover {
-                transform: scale(1.03);
-            }
-        }
-        /* 背景图片：自适应填充 */
-        .card-bg {
+        /* 背景图片：铺满屏幕且不拉伸 */
+        .bg-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
+            filter: brightness(0.7); /* 降低图片亮度，让文字更清晰 */
         }
-        /* 文字叠加层：自适应排版 */
-        .card-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: clamp(15px, 4vw, 30px); /* 自适应内边距（手机小/PC大） */
-            background: linear-gradient(transparent, rgba(0,0,0,0.75));
-            color: #fff;
-            z-index: 1;
-        }
-        .card-title {
-            font-size: clamp(18px, 5vw, 24px); /* 自适应字体大小 */
-            margin-bottom: clamp(8px, 2vw, 10px);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        .card-text {
-            font-size: clamp(14px, 3vw, 16px); /* 自适应字体大小 */
-            line-height: 1.7;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            display: -webkit-box;
-            -webkit-line-clamp: 3; /* 手机端最多显示3行文字（避免溢出） */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        /* 刷新提示：自适应位置 */
-        .refresh-tip {
-            position: absolute;
-            top: clamp(10px, 3vw, 20px);
+        /* 叠加的文字区域：居中显示 */
+        .quote-area {
+            position: absolute; /* 脱离文档流，浮在图片上 */
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            color: #fff;
-            background: rgba(0,0,0,0.5);
-            padding: clamp(4px, 1.5vw, 6px) clamp(8px, 2vw, 12px);
-            border-radius: 20px;
-            font-size: clamp(12px, 2vw, 14px);
-            z-index: 1;
+            transform: translate(-50%, -50%); /* 精准居中 */
+            text-align: center;
+            color: white; /* 文字白色，适配深色背景 */
+            padding: 0 20px;
+        }
+        .quote-title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 8px rgba(0,0,0,0.5); /* 文字阴影，增强可读性 */
+        }
+        .quote-content {
+            font-size: 24px;
+            line-height: 2;
+            max-width: 800px;
+            text-shadow: 0 0 6px rgba(0,0,0,0.6);
+        }
+        .refresh-btn {
+            margin-top: 40px;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            border: 2px solid white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .refresh-btn:hover {
+            background: rgba(255,255,255,0.5);
         }
     </style>
 </head>
 <body>
-    <div class="card-container" onclick="refreshCard()">
-        <img class="card-bg" id="cardImg" src="" alt="背景图">
-        <div class="refresh-tip">点击卡片刷新内容</div>
-        <div class="card-content">
-            <h3 class="card-title" id="cardTitle"></h3>
-            <p class="card-text" id="cardText"></p>
+    <div class="bg-container">
+        <!-- 背景图片：替换src为你的图片地址（网络图/本地图都可以） -->
+        <img class="bg-img" src="https://picsum.photos/id/1005/1920/1080" alt="背景图">
+        
+        <!-- 叠加的文字和按钮 -->
+        <div class="quote-area">
+            <div class="quote-title">动画里的治愈句子：</div>
+            <div class="quote-content" id="hitokoto"></div>
+            <button class="refresh-btn" onclick="getQuote()">刷新语录</button>
         </div>
     </div>
 
     <script>
-        const cardDataList = [
-            {
-                title: "春日的公园",
-                text: "春天的公园里，樱花花瓣随着微风轻轻飘落，草坪上的野餐垫铺着格子布，孩子们追着泡泡跑过，空气里都是青草和花香的味道。",
-                img: "https://picsum.photos/id/1000/800/600"
-            },
-            {
-                title: "海边的黄昏",
-                text: "太阳快要沉入海平面，把天空染成了橘红和淡紫的渐变色。海浪一下下拍打着沙滩，留下细碎的泡沫，远处的渔船亮起了小灯。",
-                img: "https://picsum.photos/id/1015/800/600"
-            },
-            {
-                title: "雨天的咖啡馆",
-                text: "玻璃窗上布满了雨珠，外面的街道模糊成一片。咖啡馆里放着轻柔的爵士乐，热拿铁的香气裹着湿气飘过来，翻书的声音很轻。",
-                img: "https://picsum.photos/id/1060/800/600"
-            },
-            {
-                title: "山林里的清晨",
-                text: "晨雾还没散尽，阳光穿过树叶的缝隙落在石阶上，露珠挂在草尖晃了晃，远处传来鸟叫，空气凉丝丝的，带着松针的味道。",
-                img: "https://picsum.photos/id/1082/800/600"
-            }
-        ];
-
-        window.onload = refreshCard;
-
-        function refreshCard() {
-            const randomIdx = Math.floor(Math.random() * cardDataList.length);
-            const data = cardDataList[randomIdx];
-            
-            document.getElementById("cardImg").src = data.img;
-            document.getElementById("cardTitle").innerText = data.title;
-            document.getElementById("cardText").innerText = data.text;
+        // 页面加载自动获取语录
+        window.onload = getQuote;
+        // 调用一言API
+        function getQuote() {
+            const url = "https://v1.hitokoto.cn/?c=a&encode=text";
+            fetch(url)
+                .then(res => res.text())
+                .then(text => document.getElementById("hitokoto").textContent = text)
+                .catch(() => document.getElementById("hitokoto").textContent = "获取失败，点击刷新重试~");
         }
     </script>
 </body>
