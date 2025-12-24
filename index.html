@@ -33,41 +33,43 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            color: #fff;
-            text-shadow: 0 0 6px rgba(0,0,0,0.4);
+            /* 移除文字白色，改为黑色相关样式 */
+            text-shadow: 0 0 6px rgba(255,255,255,0.4);
             padding: 0 20px;
             z-index: 10;
         }
         .quote-content-wrapper {
-            /* 纯毛玻璃：无黑色滤镜，仅半透明白色+模糊 */
-            background: rgba(255,255,255,0.15);
+            /* 调整毛玻璃背景为浅白色，让黑色文字更清晰 */
+            background: rgba(255,255,255,0.85);
             backdrop-filter: blur(8px);
             padding: 18px 28px;
             border-radius: 12px;
             margin: 0 auto 30px;
             max-width: 700px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.9);
         }
         .quote-content {
             font-size: 24px;
             line-height: 2;
             margin: 0;
             opacity: 1;
+            color: #000; /* 设置语录文字为黑色 */
         }
         .action-btn {
-            background: rgba(255,255,255,0.15);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
+            /* 调整按钮背景和文字色，保证黑色文字显示清晰 */
+            background: rgba(255,255,255,0.85);
+            color: #000; /* 按钮文字改为黑色 */
+            border: 1px solid rgba(0,0,0,0.3);
             padding: 10px 28px;
             border-radius: 30px;
             font-size: 16px;
             cursor: pointer;
             backdrop-filter: blur(8px);
-            text-shadow: 0 0 4px rgba(0,0,0,0.3);
+            text-shadow: 0 0 4px rgba(255,255,255,0.3);
         }
         .action-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: white;
+            background: rgba(255,255,255,0.95);
+            border-color: #000; /* hover时边框改为黑色 */
         }
         .loading {
             display: none;
